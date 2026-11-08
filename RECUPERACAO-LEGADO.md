@@ -17,3 +17,6 @@
 ## Validação pós-PR
 
 Conferir URLs `/noticias`, `/materiais`, `/mentoria`, `/flashcards` e pelo menos três URLs históricas de notícias. Verificar no desktop/mobile, menus, carregamento do JS e links. Validar indexação em preview e status de deploy antes do merge.
+
+## Mídia específica pendente
+A imagem original `/curativo_pele_tilapia_ceara_2026.jpg` (aproximadamente 5,4 MB) foi substituída temporariamente por um aviso editorial em SVG nesta branch. Não reutilizar uma imagem científica não relacionada. O conteúdo do artigo permanece; a imagem original ainda precisa de otimização/transferência antes da publicação definitiva.

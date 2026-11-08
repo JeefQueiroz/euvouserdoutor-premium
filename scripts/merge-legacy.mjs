@@ -33,6 +33,11 @@ if (skip) {
   console.log('Importação do legado ignorada apenas neste build de diagnóstico.');
 } else {
   restoreMedia();
+  // A foto original (~5 MB) não pôde ser transferida via conector.
+  // Durante a homologação, substitui por aviso editorial explícito.
+  const blogFile = path.join(legacy,'src/pages/BlogPost.jsx');
+  const blogSource = fs.readFileSync(blogFile,'utf8');
+  fs.writeFileSync(blogFile, blogSource.replaceAll('/curativo_pele_tilapia_ceara_2026.jpg', '/assets/tilapia-imagem-em-migracao.svg'));
   const vite = path.join(root, 'node_modules', '.bin', process.platform === 'win32' ? 'vite.cmd' : 'vite');
   if (!fs.existsSync(vite)) throw new Error('Instale as dependências do projeto raiz.');
   execute(vite, ['build'], legacy);
