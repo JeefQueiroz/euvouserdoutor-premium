@@ -8,7 +8,6 @@ const legacy = path.join(root, 'legacy');
 const output = path.join(root, 'dist');
 const skip = process.env.SKIP_LEGACY === 'true';
 const manifest = skip ? { assets: [], commit: '' } : JSON.parse(fs.readFileSync(path.join(legacy, 'assets-manifest.json'), 'utf8'));
-const source = 'https://raw.githubusercontent.com/JeefQueiroz/Euvouserdoutor/' + manifest.commit + '/';
 
 function execute(bin, args, cwd) {
   const result = spawnSync(bin, args, { cwd, stdio: 'inherit', env: process.env, timeout: 240000 });
@@ -24,23 +23,16 @@ function copyDirectory(src, dst) {
     else if (entry.isFile()) fs.copyFileSync(a, b);
   }
 }
-async function restoreMedia() {
-  for (let i = 0; i < manifest.assets.length; i += 5) {
-    await Promise.all(manifest.assets.slice(i, i + 5).map(async name => {
-      const url = source + name.split('/').map(encodeURIComponent).join('/');
-      const response = await fetch(url, { signal: AbortSignal.timeout(20000) });
-      if (!response.ok) throw new Error('Mídia original indisponível: ' + name + ' (' + response.status + ')');
-      const target = path.join(legacy, name);
-      fs.mkdirSync(path.dirname(target), { recursive: true });
-      fs.writeFileSync(target, Buffer.from(await response.arrayBuffer()));
-    }));
+function restoreMedia() {
+  for (const name of manifest.assets) {
+    if (!fs.existsSync(path.join(legacy, name))) throw new Error('Mídia original ausente do snapshot: ' + name);
   }
-  console.log('Mídias originais restauradas: ' + manifest.assets.length);
+  console.log('Mídias locais validadas: ' + manifest.assets.length);
 }
 if (skip) {
   console.log('Importação do legado ignorada apenas neste build de diagnóstico.');
 } else {
-  await restoreMedia();
+  restoreMedia();
   const vite = path.join(root, 'node_modules', '.bin', process.platform === 'win32' ? 'vite.cmd' : 'vite');
   if (!fs.existsSync(vite)) throw new Error('Instale as dependências do projeto raiz.');
   execute(vite, ['build'], legacy);

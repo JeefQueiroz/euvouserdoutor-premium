@@ -2,7 +2,6 @@
   "source": "JeefQueiroz/Euvouserdoutor",
   "commit": "4bccdd21b2ee101091957100ced139e69d7d7c83",
   "assets": [
-    "public/curativo_pele_tilapia_ceara_2026.jpg",
     "public/editorial/anemia_retina_ia_2026.webp",
     "public/editorial/angiotomografia_coronariana_2026.webp",
     "public/editorial/daraxonrasib_pancreas_2026.webp",
@@ -20,19 +19,14 @@
     "public/editorial/sarampo_vacinacao_americas_2026.webp",
     "public/editorial/vacina_hiv_2026.webp",
     "public/favicon-optimized.png",
-    "public/favicon.png",
-    "public/jeff-queiroz-eu-vou-ser-doutor.png",
     "public/jeff-queiroz-eu-vou-ser-doutor.webp",
-    "public/jeff-queiroz-perfil.jpg",
     "public/jeff-queiroz-perfil.webp",
     "public/logo-euvouserdoutor.png",
     "public/logo-euvouserdoutor.webp",
     "public/logocomp.png",
     "public/plcg2_sinapses_alzheimer_2026.jpg",
     "public/plcg2_sinapses_alzheimer_2026.webp",
-    "public/retina_chip_tech.jpg",
     "public/retina_chip_tech.webp",
-    "public/tbx5_dna_heart_2026.jpg",
     "public/tbx5_dna_heart_2026.webp"
   ]
 }
