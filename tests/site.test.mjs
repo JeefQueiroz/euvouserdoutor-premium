@@ -20,7 +20,7 @@ test('JSON-LD is valid and consistent with canonical',()=>{
  for(const name of allPages){const s=read(name);const meta=s.match(/<link rel="canonical" href="([^"]+)"/)[1];const schema=JSON.parse(s.match(/<script type="application\/ld\+json">(.*?)<\/script>/)[1]);assert.equal(schema['@context'],'https://schema.org');assert.ok(schema['@graph'].some(o=>JSON.stringify(o).includes(meta)||name==='index.html'));}
 });
 test('all internal navigation targets resolve to generated pages or assets',()=>{
- const targets=new Set(['/','/feed.xml','/sitemap.xml','/robots.txt',...allPages.map(x=>x==='index.html'?'/':'/'+x.replace(/\.html$/,''))]);
+ const targets=new Set(['/noticias','/materiais','/mentoria','/flashcards','/','/feed.xml','/sitemap.xml','/robots.txt',...allPages.map(x=>x==='index.html'?'/':'/'+x.replace(/\.html$/,''))]);
  for(const page of allPages){for(const match of read(page).matchAll(/href="(\/[^"]*)"/g)){const raw=match[1];const href=raw.split('#')[0].split('?')[0];assert.ok(targets.has(href)||fs.existsSync(path.join(out,href.slice(1))),`broken link ${raw} in ${page}`)}}
 });
 test('public indexing is off by default, preview cannot compete with the main site',()=>{

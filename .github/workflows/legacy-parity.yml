@@ -1,0 +1,30 @@
+name: Premium V3 — paridade de funcionalidades
+on:
+  push:
+    branches:
+      - restore/legacy-features-and-content
+  pull_request:
+    branches:
+      - main
+jobs:
+  build-and-parity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Instalar dependencias
+        run: npm install --no-audit --no-fund
+      - name: Gerar portal completo e validar paridade
+        run: npm run check
+      - name: Verificar rotas recuperadas
+        run: |
+          test -f dist/noticias/index.html
+          test -f dist/materiais/index.html
+          test -f dist/mentoria/index.html
+          test -f dist/flashcards/index.html
+          test -f dist/index.html
