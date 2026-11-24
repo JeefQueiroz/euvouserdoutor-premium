@@ -1,0 +1,21 @@
+# EuvouserDoutor — design e produto
+
+## Direção editorial
+Portal híbrido: notícia, divulgação científica e educação para quem estuda Medicina ou se prepara para ingressar. A página inicial é a porta de entrada leve; artigos, notícias e ferramentas se conectam por navegação persistente. O objetivo não é substituir o acervo por uma landing page.
+
+## Identidade
+O azul-profundo (#0a1b33) carrega credibilidade e mantém continuidade com o portal original. Azul de ação (#386ef2), violeta de ênfase (#8d6ef6), teal informativo (#20bac0), branco (#ffffff), fundo claro (#f5f7fb), texto (#17253b) e texto secundário (#66738a). Vermelho apenas em avisos reais. **Fonte normativa de tokens:** o bloco `:root` de `assets/site.css`. Este documento espelha o CSS, que é o único ponto de edição das variáveis de cor.
+
+Tipografia: sistema sem download externo; título 42–86px com espaçamento compacto, corpo 16–18px e texto útil legível. Layout central 1180px, margens mobile 16–18px, cards de 15–20px de raio, sombra só quando cria separação útil.
+
+## Marca e assinatura
+Logotipo original otimizado (14 KB WebP) dentro de placa azul, em vez do símbolo + genérico. Elemento editorial característico: seção “Explore o portal completo”, que reúne de maneira legível notícias, materiais, flashcards e mentoria. Evitar números decorativos e menus excessivamente amplos.
+
+## UX e limites
+- Navegação: até 6 destinos no desktop + busca, menu expansível no mobile, estado da página atual e foco visível.
+- Busca global: consulta índice estático no mesmo domínio (sem backend ou rastreamento); filtra por tipo; protege contra injeção usando somente `textContent`.
+- Conteúdo YMYL: fontes, autoria, datas e aviso informativo; nenhuma alegação de revisão médica sem prova.
+- Acervo React legado permanece nas rotas antigas, com faixa discreta para retornar ao portal Premium.
+- Performance: a home não importa React, fontes remotas ou bibliotecas de ícones. A busca carrega script extra apenas na página de pesquisa.
+- Acessibilidade: pt-BR, links semânticos, alvos de toque >= 44px, controle por teclado e `prefers-reduced-motion`.
+- Prévia: noindex até revisão das rotas e do domínio canônico. Não há corte automático do domínio público.

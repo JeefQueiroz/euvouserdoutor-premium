@@ -65,6 +65,9 @@ if (skip) {
     const dst = path.join(output, route.slice(1), 'index.html');
     fs.mkdirSync(path.dirname(dst), { recursive: true });
     let html = fs.readFileSync(src, 'utf8');
+    const bridge = '<nav class="evd-premium-bridge" aria-label="Acesso ao portal completo"><div class="evd-premium-bridge-inner"><strong>EuvouserDoutor · Acervo editorial</strong><div class="evd-premium-bridge-links"><a href="/">Página inicial</a><a href="/busca">Buscar</a><a href="/noticias">Notícias</a><a href="/materiais">Materiais</a><a href="/mentoria">Mentoria</a></div></div></nav>';
+    html = html.replace('</head>', '<link rel="stylesheet" href="/assets/portal-bridge.css"></head>');
+    html = html.replace('<body>', '<body>' + bridge);
     if (!indexed) html = html.replace(/<meta name="robots" content="[^"]*"\s*\/>/, '<meta name="robots" content="noindex,nofollow" />');
     fs.writeFileSync(dst, html);
     imported.push(route);
@@ -79,6 +82,26 @@ if (skip) {
     const entries = imported.filter(x => x.startsWith('/noticias')).map(x => '<url><loc>' + base + x + '</loc></url>').join('');
     fs.writeFileSync(filename, premium.replace('</urlset>', entries + '</urlset>'));
   }
+
+  const [{ routeMeta }, { articles }] = await Promise.all([
+    import('../legacy/src/institutional.js'),
+    import('../src/content.mjs')
+  ]);
+  const seed = JSON.parse(fs.readFileSync(path.join(output, 'search-index.json'),'utf8'));
+  const historicalNews = Object.values(routeMeta)
+    .filter(meta => typeof meta.path === 'string' && meta.path.startsWith('/noticias/') && imported.includes(meta.path))
+    .map(meta => ({
+      href: meta.path,
+      title: String(meta.title || 'Notícia').replace(/\\s*\\|\\s*EuvouserDoutor$/i,''),
+      description: meta.description || 'Notícia do acervo EuvouserDoutor.',
+      tag: 'Notícias',
+      kind: 'noticias'
+    }));
+  const unique = [...new Map([...seed,...historicalNews].map(item=>[item.href,item])).values()];
+  if(historicalNews.length < 50 || unique.length < articles.length + 50) throw new Error('Índice global incompleto');
+  fs.writeFileSync(path.join(output, 'search-index.json'),JSON.stringify(unique));
+  console.log('Busca integrada: ' + unique.length + ' entradas, incluindo ' + historicalNews.length + ' notícias históricas.');
+
   fs.writeFileSync(path.join(output, 'legacy-parity.json'), JSON.stringify({sourceCommit:manifest.commit,imported,images:manifest.assets.length}, null, 2));
   console.log('Rotas do portal original restauradas: ' + imported.length);
 }

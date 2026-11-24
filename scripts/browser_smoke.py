@@ -37,6 +37,14 @@ try:
                 toggle.click()
                 assert toggle.get_attribute("aria-expanded")=="true"
             page.screenshot(path=str(capture/f"home-{label}.png"),full_page=True)
+            page.goto(base+"/busca.html",wait_until="networkidle")
+            field=page.locator("[data-portal-query]")
+            field.fill("microbiota")
+            page.wait_for_timeout(200)
+            assert page.locator(".portal-result-card").count() >= 1, "Busca global sem resultados"
+            page.locator('[data-search-category="noticias"]').click()
+            assert page.locator(".portal-result-card").count() >= 1, "Filtro de notícias sem resultados"
+            page.screenshot(path=str(capture/f"busca-{label}.png"),full_page=False)
             page.goto(base+"/noticias/",wait_until="networkidle")
             assert "Medicina" in page.locator("body").inner_text() or "medicina" in page.locator("body").inner_text().lower()
             page.screenshot(path=str(capture/f"noticias-{label}.png"),full_page=True)
