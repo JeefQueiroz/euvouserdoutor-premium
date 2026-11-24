@@ -46,6 +46,12 @@ try:
             assert page.locator(".portal-result-card").count() >= 1, "Filtro de notícias sem resultados"
             page.screenshot(path=str(capture/f"busca-{label}.png"),full_page=False)
             page.goto(base+"/noticias/",wait_until="networkidle")
+            assert "Voltar ao Premium" in page.locator(".evd-premium-bridge").inner_text()
+            if label == "mobile":
+                cookie_box=page.locator("#cookie-consent")
+                assert cookie_box.count() == 1
+                assert cookie_box.bounding_box()["height"] < 300, "Consentimento cobre grande parte da tela"
+
             assert "Medicina" in page.locator("body").inner_text() or "medicina" in page.locator("body").inner_text().lower()
             page.screenshot(path=str(capture/f"noticias-{label}.png"),full_page=True)
             for route,needle in [("/materiais/","Materiais de Apoio"),("/flashcards/","Flashcards Doutor"),("/mentoria/","Mentoria")]:

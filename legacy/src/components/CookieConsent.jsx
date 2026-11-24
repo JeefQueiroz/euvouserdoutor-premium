@@ -32,7 +32,7 @@ export function CookieConsent({ setView }) {
   };
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-[80] bg-[#0A192F] text-white border-t border-white/10 shadow-2xl">
+    <div id="cookie-consent" className="fixed inset-x-0 bottom-0 z-[80] bg-[#0A192F] text-white border-t border-white/10 shadow-2xl">
       <div className="max-w-6xl mx-auto px-5 py-5 flex flex-col lg:flex-row gap-4 lg:items-center lg:justify-between">
         <div className="max-w-3xl">
           <p className="text-sm font-bold mb-1">Uso de cookies</p>
