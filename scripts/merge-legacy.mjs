@@ -67,7 +67,7 @@ if (skip) {
     let html = fs.readFileSync(src, 'utf8');
     const bridge = '<nav class="evd-premium-bridge" aria-label="Acesso ao portal completo"><div class="evd-premium-bridge-inner"><strong>EuvouserDoutor · Acervo editorial</strong><div class="evd-premium-bridge-links"><a href="/">Página inicial</a><a href="/busca">Buscar</a><a href="/noticias">Notícias</a><a href="/materiais">Materiais</a><a href="/mentoria">Mentoria</a></div></div></nav>';
     html = html.replace('</head>', '<link rel="stylesheet" href="/assets/portal-bridge.css"></head>');
-    html = html.replace('<body>', '<body>' + bridge);
+    html = html.replace(/<body([^>]*)>/i, '<body$1>' + bridge);
     if (!indexed) html = html.replace(/<meta name="robots" content="[^"]*"\s*\/>/, '<meta name="robots" content="noindex,nofollow" />');
     fs.writeFileSync(dst, html);
     imported.push(route);
