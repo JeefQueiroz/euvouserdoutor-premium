@@ -56,7 +56,7 @@ const pages = [{route:'/',html:home()},{route:'/artigos',html:allArticles()},{ro
 fs.rmSync(output,{recursive:true,force:true});fs.mkdirSync(output,{recursive:true});
 for (const {route,html} of pages){const file=route==='/'?'index.html':route.slice(1)+'.html';const full=path.join(output,file);fs.mkdirSync(path.dirname(full),{recursive:true});fs.writeFileSync(full,html)}
 fs.mkdirSync(path.join(output,'assets'),{recursive:true});
-for(const file of fs.readdirSync(path.join(root,'assets'))) fs.copyFileSync(path.join(root,'assets',file),path.join(output,'assets',file));
+fs.cpSync(path.join(root,'assets'),path.join(output,'assets'),{recursive:true});
 const rss=`<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>EuvouserDoutor</title><link>${siteUrl}/</link><description>${esc(brand.description)}</description><language>pt-BR</language>${articles.map(a=>`<item><title>${esc(a.title)}</title><link>${abs('/artigos/'+a.slug)}</link><guid isPermaLink="true">${abs('/artigos/'+a.slug)}</guid><description>${esc(a.description)}</description><pubDate>${new Date(a.updated+'T12:00:00Z').toUTCString()}</pubDate></item>`).join('')}</channel></rss>`;
 const searchSeed = [
   ...articles.map(a=>({href:'/artigos/'+a.slug,title:a.title,description:a.description,tag:a.tag,kind:'artigos'})),
