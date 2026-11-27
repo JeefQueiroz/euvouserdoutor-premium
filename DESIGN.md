@@ -28,3 +28,6 @@ A camada compartilhada `assets/motion.css` define durações e curvas sem depend
 
 ## Assinatura científica da Home
 O hero usa uma ilustração vetorial original da dupla hélice do DNA em azul, violeta e teal, apresentada explicitamente como esquema, não como modelo molecular de precisão. Uma única composição focal; sem etiquetas decorativas, contadores ou fundos animados contínuos. Imagem estática com dimensões intrínsecas e movimento breve opcional. Não modificar logotipo, navegação ou textos médicos nesta fase.
+
+## Apresentação editorial
+Os quatro artigos Premium usam capas SVG próprias, relacionadas ao tema e sem dependências remotas. A ilustração no artigo é explicitamente esquemática, não é evidência clínica. O acervo legado usa metadados canônicos para links, deduplica por destino, inclui todas as rotas de notícia e deriva os filtros das categorias disponíveis. Não usar imagens de terceiros como se fossem evidência; a revisão de licenças e de correspondência das fotos históricas continua pendente.

@@ -69,6 +69,14 @@ try:
                 assert cookie_box.bounding_box()["height"] < 300, "Consentimento cobre grande parte da tela"
 
             assert "Medicina" in page.locator("body").inner_text() or "medicina" in page.locator("body").inner_text().lower()
+            news_entries=page.locator("[data-news-entry]")
+            all_targets=news_entries.evaluate_all("(els)=>els.map(el=>el.getAttribute('href'))")
+            assert len(all_targets)>=70 and len(all_targets)==len(set(all_targets)), "Noticias perdidas ou duplicadas"
+            assert page.locator("[data-news-filter='Neurociência']").count()==1, "Categoria ausente"
+            page.locator("[data-news-filter='Neurociência']").click()
+            assert news_entries.count()>0 and news_entries.count()<len(all_targets), "Filtro de noticias nao funciona"
+            page.locator("[data-news-filter='Todas']").click()
+            assert news_entries.count()==len(all_targets)
             page.screenshot(path=str(capture/f"noticias-{label}.png"),full_page=True)
             for route,needle in [("/materiais/","Materiais de Apoio"),("/flashcards/","Flashcards Doutor"),("/mentoria/","Mentoria")]:
                 page.goto(base+route,wait_until="networkidle")

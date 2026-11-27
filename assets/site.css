@@ -68,3 +68,9 @@
 .scientific-hero figcaption{font-size:11px;line-height:1.5;color:#b9cbe8;letter-spacing:.04em;text-align:center;margin:0}
 @media(max-width:760px){.hero-visual.scientific-hero{max-width:340px;width:100%;margin:0 auto 26px;gap:0}.scientific-hero figcaption{margin-top:-3px}}
 @media(max-width:430px){.hero-visual.scientific-hero{max-width:280px}}
+/* Editorial illustrations: one subject-specific composition, fixed aspect ratio. */
+.article-art.editorial-art{height:auto;aspect-ratio:16/9;background:#0b1c34;display:block}
+.article-art.editorial-art:before{content:none}
+.editorial-art img,.editorial-figure img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:contain}
+.editorial-figure{margin:0 0 32px;overflow:hidden;border:1px solid var(--line);border-radius:16px;background:white}
+.editorial-figure figcaption{padding:10px 16px;color:var(--muted);font-size:12px;line-height:1.4}
