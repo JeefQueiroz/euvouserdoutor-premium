@@ -1,0 +1,61 @@
+/* EVD motion tokens — web-first, inspired by MotionMaxxing's entry/exit grammar.
+   CSS-only; no film runtime, no animation of essential content on load. */
+:root {
+  --evd-motion-fast: 140ms;
+  --evd-motion-ui: 220ms;
+  --evd-motion-panel: 280ms;
+  --evd-motion-hero: 550ms;
+  --evd-ease-land: cubic-bezier(.16,.8,.24,1);
+  --evd-ease-snap: cubic-bezier(.2,.92,.32,1);
+  --evd-ease-balanced: cubic-bezier(.4,0,.6,1);
+  --evd-ease-exit: cubic-bezier(.55,0,.85,.45);
+}
+.btn, .journey-card, .article-card, .portal-hub-link, .portal-result-card {
+  transition-duration: var(--evd-motion-ui);
+  transition-timing-function: var(--evd-ease-land);
+}
+.primary-nav a, .evd-premium-bridge a, .portal-search-form button {
+  transition: color var(--evd-motion-fast) var(--evd-ease-land),
+              background-color var(--evd-motion-fast) var(--evd-ease-land),
+              border-color var(--evd-motion-fast) var(--evd-ease-land);
+}
+.portal-search-form button[aria-pressed] {
+  transition-timing-function: var(--evd-ease-snap);
+}
+.btn:active, .portal-hub-link:active, .portal-result-card:active {
+  transform: translateY(0) scale(.985);
+  transition-duration: var(--evd-motion-fast);
+}
+@keyframes evd-panel-enter {
+  from { opacity: .7; translate: 0 -6px; }
+  to { opacity: 1; translate: 0 0; }
+}
+@keyframes evd-hero-arrive {
+  from { opacity: .75; translate: 0 10px; }
+  to { opacity: 1; translate: 0 0; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hero-visual .core-shape {
+    animation: evd-hero-arrive var(--evd-motion-hero) var(--evd-ease-land) both;
+  }
+  @media (max-width: 760px) {
+    .primary-nav.is-open {
+      animation: evd-panel-enter var(--evd-motion-panel) var(--evd-ease-land) both;
+    }
+  }
+}
+@media (hover: none) {
+  .btn:hover, .journey-card:hover, .article-card:hover,
+  .portal-hub-link:hover, .portal-result-card:hover { transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto !important; }
+  .hero-visual .core-shape, .primary-nav.is-open { animation: none !important; }
+  .btn, .journey-card, .article-card, .portal-hub-link, .portal-result-card,
+  .primary-nav a, .evd-premium-bridge a, .portal-search-form button {
+    transition: none !important;
+  }
+  .btn:hover, .btn:active, .journey-card:hover, .article-card:hover,
+  .portal-hub-link:hover, .portal-hub-link:active,
+  .portal-result-card:hover, .portal-result-card:active { transform: none !important; }
+}

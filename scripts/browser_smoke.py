@@ -64,6 +64,21 @@ try:
             assert not errors, f"Erro Javascript em {label}: {errors[:8]}"
             print(f"Navegador {label}: home, notícias, materiais, flashcards, mentoria e artigo OK")
             page.close()
+        reduced=browser.new_page(viewport={"width":390,"height":844},reduced_motion="reduce")
+        reduced.goto(base+"/",wait_until="networkidle")
+        assert reduced.locator("h1").is_visible(), "Titulo nao pode depender de animacao"
+        assert reduced.locator(".core-shape").evaluate("(el)=>getComputedStyle(el).animationName") == "none"
+        toggle=reduced.locator("[data-menu-button]")
+        toggle.click()
+        assert toggle.get_attribute("aria-expanded")=="true"
+        assert reduced.locator("#primary-navigation").evaluate("(el)=>getComputedStyle(el).animationName") == "none"
+        toggle.click()
+        assert toggle.get_attribute("aria-expanded")=="false"
+        reduced.goto(base+"/noticias/",wait_until="networkidle")
+        assert reduced.locator(".evd-premium-bridge").is_visible()
+        assert reduced.locator(".evd-premium-bridge a").first.evaluate("(el)=>getComputedStyle(el).transitionDuration") == "0s"
+        reduced.close()
+        print("Movimento reduzido: home, menu e ponte legada OK")
         browser.close()
 finally:
     server.terminate()

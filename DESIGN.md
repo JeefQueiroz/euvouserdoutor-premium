@@ -19,3 +19,6 @@ Logotipo original otimizado (14 KB WebP) dentro de placa azul, em vez do símbol
 - Performance: a home não importa React, fontes remotas ou bibliotecas de ícones. A busca carrega script extra apenas na página de pesquisa.
 - Acessibilidade: pt-BR, links semânticos, alvos de toque >= 44px, controle por teclado e `prefers-reduced-motion`.
 - Prévia: noindex até revisão das rotas e do domínio canônico. Não há corte automático do domínio público.
+
+## Movimento
+A camada compartilhada `assets/motion.css` define durações e curvas sem dependências adicionais, carregada também no legado. A animação destaca estado e hierarquia; conteúdo principal é visível desde o primeiro frame. Respeitar movimento reduzido e dispositivos sem hover. Diretrizes e critérios: `docs/MOTION.md`.

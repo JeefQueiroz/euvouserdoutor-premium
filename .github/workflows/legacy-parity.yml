@@ -3,9 +3,11 @@ on:
   push:
     branches:
       - restore/legacy-features-and-content
+      - feat/premium-motion-system
   pull_request:
     branches:
       - main
+      - restore/legacy-features-and-content
 jobs:
   build-and-parity:
     runs-on: ubuntu-24.04
