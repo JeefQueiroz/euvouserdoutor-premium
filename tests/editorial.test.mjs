@@ -1,3 +1,4 @@
+import { normalizeRoutePath, pathToView } from '../legacy/src/institutional.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -26,4 +27,14 @@ test('newsroom links each historical news route once', {skip:process.env.SKIP_LE
   const urls=[...html.matchAll(/<a\b[^>]*href="([^"]+)"[^>]*data-news-entry="[^"]+"[^>]*>/g)].map(m=>m[1]);
   assert.equal(urls.length,new Set(urls).size);
   assert.deepEqual([...urls].sort(),[...expected].sort());
+});
+
+test('accented historical routes render the right article and remain searchable', {skip:process.env.SKIP_LEGACY==='true'},()=>{
+ const route='/noticias/cancer-cabeca-pescoço-quimio-imunoterapia-2026';
+ assert.equal(normalizeRoutePath(encodeURI(route)),route);
+ assert.ok(pathToView[route]?.startsWith('post_'));
+ const html=fs.readFileSync('dist'+route+'/index.html','utf8');
+ assert.match(html, /NewsArticle/);
+ const index=JSON.parse(fs.readFileSync('dist/search-index.json','utf8'));
+ assert.ok(index.some(x=>x.href===route));
 });

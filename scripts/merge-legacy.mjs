@@ -54,7 +54,7 @@ if (skip) {
     }
   }
   const xml = fs.readFileSync(path.join(legacy, 'dist', 'sitemap.xml'), 'utf8');
-  const routes = [...new Set([...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => new URL(m[1]).pathname))];
+  const routes = [...new Set([...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => decodeURI(new URL(m[1]).pathname)))];
   const imported = [];
   const indexed = process.env.PUBLIC_INDEXING === 'true' && process.env.SITE_URL?.startsWith('https://');
   for (const route of routes) {

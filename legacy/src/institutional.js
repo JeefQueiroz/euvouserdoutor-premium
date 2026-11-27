@@ -427,7 +427,8 @@ export const pathToView = {
 };
 
 export const normalizeRoutePath = (pathname) => {
-  const path = typeof pathname === 'string' ? pathname.split(/[?#]/, 1)[0] : '/';
+  let path = typeof pathname === 'string' ? pathname.split(/[?#]/, 1)[0] : '/';
+  try { path = decodeURI(path); } catch { return '/404'; }
   if (!path || path === '/') return '/';
   return path.replace(/\/+$/, '') || '/';
 };

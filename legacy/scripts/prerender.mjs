@@ -108,7 +108,7 @@ const stylesheetLinks = [...shell.matchAll(/<link rel="stylesheet"[^>]*>/g)].map
 const modulePreloadLinks = [...shell.matchAll(/<link rel="modulepreload"[^>]*>/g)].map((match) => match[0]).join('');
 const scriptTags = [...shell.matchAll(/<script[^>]*src="[^"]+"[^>]*><\/script>/g)].map((match) => match[0]).join('');
 const sitemap = await fs.readFile(path.join(distDir, 'sitemap.xml'), 'utf8');
-const paths = [...sitemap.matchAll(/<loc>(.*?)<\/loc>/g)].map((match) => new URL(match[1]).pathname || '/');
+const paths = [...sitemap.matchAll(/<loc>(.*?)<\/loc>/g)].map((match) => decodeURI(new URL(match[1]).pathname) || '/');
 
 for (const routePath of [...new Set(paths)]) {
   const view = pathToView[routePath] || 'notfound';
