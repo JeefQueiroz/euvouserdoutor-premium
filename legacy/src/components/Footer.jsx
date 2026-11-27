@@ -4,7 +4,7 @@ import { COOKIE_CONSENT_OPEN_EVENT } from './CookieConsent';
 
 const sections = [
   ['Descobrir', [['/noticias','Notícias e descobertas'],['/saude','Saúde'],['/ciencia','Pesquisa científica'],['/artigos','Biblioteca'],['/busca','Buscar conteúdo']]],
-  ['Aprender', [['/vestibular','Vestibular de Medicina'],['/medicina','Vida acadêmica'],['/materiais','Materiais gratuitos'],['/flashcards','Flashcards'],['/mentoria','Mentoria']]],
+  ['Aprender', [['/vestibular','Vestibular de Medicina'],['/medicina','Vida acadêmica'],['/materiais','Materiais gratuitos'],['/flashcards','Flashcards'],['/questoes','Questões comentadas'],['/mentoria','Mentoria']]],
   ['Institucional', [['/sobre','Sobre o projeto'],['/politica-editorial','Política editorial'],['/aviso-medico','Aviso médico'],['/privacidade','Privacidade'],['/contato','Contato'],['/termos-de-uso','Termos de uso'],['/propriedade-intelectual','Propriedade intelectual'],['/politica-de-cookies','Política de cookies']]]
 ];
 const socials = [['Instagram','instagram'],['YouTube','youtube'],['LinkedIn','linkedin'],['Pinterest','pinterest'],['Facebook','facebook'],['Telegram','telegram']];

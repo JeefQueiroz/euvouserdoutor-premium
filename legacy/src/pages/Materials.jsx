@@ -166,6 +166,9 @@ export const Materials = ({ setView }) => {
             })}
           </div>
 
+          <a href="/questoes" className="block bg-[#11141A] rounded-[24px] p-6 border border-white/[0.08] focus-visible:ring-2 focus-visible:ring-[#4F8CFF]">
+            <span className="text-xs font-bold text-[#4F8CFF]">PRÁTICA GRATUITA</span><h2 className="text-2xl font-black text-white mt-2">Questões comentadas</h2><p className="text-[#CBD5E1] mt-3">9 questões iniciais com explicação de todas as alternativas e revisão de erros.</p><span className="block text-[#4F8CFF] mt-4 font-bold">Começar a praticar →</span>
+          </a>
           {/* Additional Info Section */}
           <div className="bg-[#11141A] rounded-[32px] p-10 border border-white/[0.05] premium-border space-y-8">
             <div className="max-w-2xl">

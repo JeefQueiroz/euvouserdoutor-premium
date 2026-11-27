@@ -34,3 +34,6 @@ Os quatro artigos Premium usam capas SVG próprias, relacionadas ao tema e sem d
 
 ## Flashcards interativos
 Ferramenta pública com 12 cartas introdutórias de métodos de estudo, fisiologia e epidemiologia. Sessões por tema, revelação explícita, avaliação de lembrança, intervalos simples e progresso local versionado. Sem login, dados de saúde, rastreamento ou backend. Conteúdo didático introdutório; ampliar o acervo com revisão editorial. O progresso não constitui medição de domínio. A política de privacidade deverá documentar o armazenamento local antes da publicação definitiva.
+
+## Questões comentadas
+Rota `/questoes` integrada ao acervo, busca e biblioteca. Nove questões originais de três temas; feedback por alternativa, resultado da sessão e revisão exclusiva dos erros. Não há cronômetro, conta, envio de respostas ou histórico permanente. A política de privacidade descreve o armazenamento local dos flashcards e o caráter temporário das questões. Conteúdo inicial para revisão didática, sujeito a revisão editorial antes de indexação pública.

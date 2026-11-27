@@ -92,6 +92,27 @@ try:
             page.wait_for_function("document.querySelector('[data-study-due]')?.textContent.startsWith('11 cartas')")
             assert not page.evaluate("document.documentElement.scrollWidth > window.innerWidth + 3"),"Overflow nos flashcards"
             page.screenshot(path=str(capture/f"flashcards-{label}.png"),full_page=False)
+            page.goto(base+"/questoes/",wait_until="networkidle")
+            if page.locator("#cookie-consent").count():
+                page.get_by_role("button",name="Recusar não essenciais").click()
+            page.locator("[data-quiz-topic]").select_option("Epidemiologia")
+            page.locator("[data-quiz-start]").click()
+            page.locator("input[name=quiz-choice]").nth(0).check()
+            page.locator("[data-quiz-submit]").click()
+            assert page.locator("[data-quiz-feedback]").is_visible()
+            assert page.locator(".evd-quiz-explanations li").count()==4
+            page.locator("[data-quiz-next]").click()
+            page.locator("input[name=quiz-choice]").nth(2).check()
+            page.locator("[data-quiz-submit]").click()
+            page.locator("[data-quiz-next]").click()
+            page.locator("input[name=quiz-choice]").nth(0).check()
+            page.locator("[data-quiz-submit]").click()
+            page.locator("[data-quiz-next]").click()
+            assert "2 de 3" in page.locator("[data-quiz-score]").inner_text()
+            page.locator("[data-quiz-retry]").click()
+            assert "Questão 1 de 1" in page.locator(".evd-study-progress").inner_text()
+            assert not page.evaluate("document.documentElement.scrollWidth > window.innerWidth + 3"),"Overflow nas questoes"
+            page.screenshot(path=str(capture/f"questoes-{label}.png"),full_page=False)
             page.goto(base+"/noticias/cancer-cabeca-pesco%C3%A7o-quimio-imunoterapia-2026/",wait_until="networkidle")
             assert "pescoço" in page.locator("main").inner_text().casefold(), "Rota acentuada nao renderizou a materia"
             page.goto(base+"/noticias/bacterias-lingua-velocidade-raciocinio-2026/",wait_until="networkidle")

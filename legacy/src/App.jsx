@@ -10,6 +10,7 @@ import { News } from './pages/News';
 import { Materials } from './pages/Materials';
 import { Mentorship } from './pages/Mentorship';
 import { FlashcardsPage } from './pages/FlashcardsPage';
+import { QuestionsPage } from './pages/QuestionsPage';
 import { Article } from './pages/Article';
 import { About } from './pages/About';
 import { Contact } from './pages/Contact';
@@ -156,6 +157,7 @@ export default function App({ initialPath }) {
           {view === 'materials' && <Materials setView={navigate} telegram={telegram} />}
           {view === 'mentorship' && <Mentorship setView={navigate} telegram={telegram} />}
           {view === 'flashcards' && <FlashcardsPage setView={navigate} />}
+          {view === 'questions' && <QuestionsPage />}
           {view === 'about' && <About />}
           {view === 'author' && <Author setView={navigate} />}
           {view === 'contact' && <Contact />}
