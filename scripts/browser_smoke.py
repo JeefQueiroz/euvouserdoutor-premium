@@ -49,7 +49,10 @@ try:
             page.locator('[data-search-category="noticias"]').click()
             assert page.locator(".portal-result-card").count() >= 1, "Filtro de notícias sem resultados"
             page.screenshot(path=str(capture/f"busca-{label}.png"),full_page=False)
+            requested=[]
+            page.on("request",lambda request:requested.append(request.url))
             page.goto(base+"/noticias/",wait_until="networkidle")
+            assert not any("/assets/BlogPost-" in url for url in requested), "Carregamento precoce de artigos"
             assert page.locator(".evd-premium-bridge").count()==0, "Faixa duplicada retornou"
             nav=page.locator(".evd-shared-header nav")
             assert nav.locator('a[href="/busca"]').count()==1
@@ -138,6 +141,7 @@ try:
             page.screenshot(path=str(capture/f"videos-{label}.png"),full_page=False)
             page.goto(base+"/noticias/cancer-cabeca-pesco%C3%A7o-quimio-imunoterapia-2026/",wait_until="networkidle")
             assert "pescoço" in page.locator("main").inner_text().casefold(), "Rota acentuada nao renderizou a materia"
+            assert any("/assets/BlogPost-" in url for url in requested), "Modulo de artigo nao carregado"
             page.goto(base+"/noticias/bacterias-lingua-velocidade-raciocinio-2026/",wait_until="networkidle")
             assert "bact" in page.locator("body").inner_text().casefold()
             page.screenshot(path=str(capture/f"artigo-{label}.png"),full_page=False)

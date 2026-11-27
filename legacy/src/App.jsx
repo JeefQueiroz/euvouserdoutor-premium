@@ -1,10 +1,8 @@
-import React, { useState, useEffect, lazy, Suspense } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
-import { GoogleAnalytics } from './components/analytics/GoogleAnalytics';
 import { CookieConsent } from './components/CookieConsent';
 import { institutional, normalizeRoutePath, pathToView, routeMeta } from './institutional';
-import { BlogPost } from './pages/BlogPost';
 import { Home } from './pages/Home';
 import { News } from './pages/News';
 import { Materials } from './pages/Materials';
@@ -23,7 +21,7 @@ import { CookiePolicy } from './pages/CookiePolicy';
 import { Author } from './pages/Author';
 import { NotFound } from './pages/NotFound';
 
-export default function App({ initialPath }) {
+export default function App({ initialPath, BlogPostComponent }) {
   const resolveView = (pathname) => pathToView[normalizeRoutePath(pathname)] ?? 'notfound';
   const currentPath = initialPath || (typeof window !== 'undefined' ? window.location.pathname : '/');
   const initialView = resolveView(currentPath);
@@ -43,7 +41,7 @@ export default function App({ initialPath }) {
 
     const path = routeMeta[nextView].path;
     // Cross into canonical static pages via real navigation, not a legacy SPA copy.
-    if (['home','author','contact','about'].includes(nextView)) {
+    if (['home','author','contact','about','privacy','medicalDisclaimer'].includes(nextView) || nextView.startsWith('post_')) {
       window.location.assign(path);
       return;
     }
@@ -145,8 +143,9 @@ export default function App({ initialPath }) {
   return (
     <div className="min-h-screen bg-[#080A0F] font-sans selection:bg-[#4F8CFF] selection:text-white text-left">
       {/* Analytics desativado no Premium ate revisao LGPD e consentimento. */}
+      <a className="evd-skip-link" href="#conteudo">Pular para o conteúdo</a>
       <Header setView={navigate} currentView={view} telegram={telegram} />
-      <main>
+      <main id="conteudo" tabIndex={-1}>
         <Suspense fallback={
           <div className="flex items-center justify-center min-h-[60vh] bg-[#080A0F]">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#4F8CFF]"></div>
@@ -169,7 +168,7 @@ export default function App({ initialPath }) {
           {view === 'intellectualProperty' && <IntellectualProperty />}
           {view === 'cookies' && <CookiePolicy />}
           {view === 'admin' && <NotFound setView={navigate} />}
-          {typeof view === 'string' && view.startsWith('post_') && <BlogPost setView={navigate} postId={view} profileImg={profileImg} telegram={telegram} />}
+          {typeof view === 'string' && view.startsWith('post_') && (BlogPostComponent ? <BlogPostComponent setView={navigate} postId={view} profileImg={profileImg} telegram={telegram} /> : <NotFound setView={navigate} />)}
           {view === 'notfound' && <NotFound setView={navigate} />}
         </Suspense>
       </main>

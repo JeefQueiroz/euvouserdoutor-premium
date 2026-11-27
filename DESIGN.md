@@ -43,3 +43,6 @@ Rota `/laboratorio`: dois mecanismos introdutórios (circulação e trocas alveo
 
 ## Biblioteca audiovisual
 `/videos` usa player nativo, capa vertical, legendas pt-BR e transcrição. Sem autoplay, dependências ou vídeo na Home; estado vazio explícito e não indexado. Publicação somente de arquivos reais ligados a metadados de aprovação e hashes. Contrato local: `docs/VIDEO.md`. O motor de renderização externo permanece independente.
+
+## Desempenho do legado
+Corpos das notícias são importados sob demanda no navegador; o SSR conserva o componente síncrono para gerar HTML completo. Nas páginas de estudo e listagem, o módulo de artigos não integra o grafo estático. Falha no download mantém o texto pré-renderizado e oferece recarregamento. A navegação para notícias individuais usa carregamento de página real. O CI verifica o manifesto Vite, orçamento de 350 kB do chunk de entrada e requisições em Chromium; não equivale a métricas de Core Web Vitals em campo. Todas as rotas legadas oferecem link de salto ao conteúdo.
