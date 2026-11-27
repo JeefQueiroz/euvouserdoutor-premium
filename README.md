@@ -5,7 +5,7 @@ Novo portal editorial estático, responsivo e orientado à pesquisa orgânica. P
 ## Principais decisões
 
 - Azul-escuro como identidade principal; azul e violeta como acentos, sem bibliotecas pesadas de efeitos.
-- 15 páginas HTML independentes: Home, quatro áreas, biblioteca de artigos, quatro artigos completos, Sobre, Política Editorial, Aviso Médico, Privacidade e Contato.
+- Páginas Premium independentes e acervo React recuperado: Home, áreas, biblioteca, notícias, materiais, flashcards, questões, laboratório e vídeos.
 - Metadados únicos, canonical absoluto, Open Graph, Twitter cards, Organization/WebSite, Article e BreadcrumbList em JSON-LD conforme o conteúdo.
 - Sitemap XML e RSS automatizados; `robots.txt` preparado para Google/Bing/OAI-SearchBot/PerplexityBot.
 - Sem analytics, cookies de rastreamento, fontes externas, autenticação ou scripts de terceiros por padrão.
@@ -24,26 +24,13 @@ São executados a geração estática e os testes de: conteúdo rastreável, H1,
 
 Para abrir no navegador, execute `python3 scripts/dev_server.py` e acesse `http://127.0.0.1:8765`. O servidor de desenvolvimento resolve URLs limpas localmente.
 
-## Publicação pelo Mac
+## Homologação e publicação
 
-O destino **correto**, solicitado, é:
+Repositório existente: `JeefQueiroz/euvouserdoutor-premium`. Projeto Vercel existente: `euvouserdoutor-premium-v3`, equipe `euvouserdoutorrs-projects`. Domínio original: `www.euvouserdoutor.com` (não alterar sem aprovação).
 
-| Serviço | Destino |
-|---|---|
-| GitHub | `JeefQueiroz/euvouserdoutor-premium` **repositório existente** |
-| Vercel | equipe `euvouserdoutorrs-projects` (conta Euvouserdoutor) |
-| Projeto Vercel | `euvouserdoutor-premium-v3` |
-| Site original | `www.euvouserdoutor.com` — **não alterar ainda** |
+A recuperação e as melhorias estão em PRs empilhados: #1 (`restore/legacy-features-and-content` → main) e #2 (`feat/premium-motion-system` → recuperação). Testar a versão combinada pelo preview do PR #2. O script legado `deploy-mac.sh` foi descontinuado porque copiava apenas parte dos arquivos e fazia push direto à main. Usar PRs e verificações normais; não criar projetos, forçar push, integrar main ou transferir domínio sem autorização explícita.
 
-O repositório já existe e o projeto Vercel foi vinculado pelo usuário. Faça login no GitHub como JeefQueiroz e execute:
-
-```bash
-bash deploy-mac.sh
-```
-
-O script valida a identidade no GitHub, clona o repositório existente (preservando o histórico e a LICENSE), aplica o código e faz push na branch `main`. A Vercel, já vinculada ao GitHub pelo usuário, deverá disparar o deploy automaticamente. **Não cria repositório, não reconecta Vercel, não transfere domínio e não ativa indexação pública.**
-
-Se houver falha de permissão GitHub/Vercel, o script encerra; nunca recorre automaticamente à conta errada nem força push.
+`npm run check` gera também o inventário editorial em `audit-reports/editorial-review.json`. Consulte `docs/EDITORIAL-REVIEW.md` para aprovação por conteúdo. A indexação pública falha no build se houver revisão pendente ou desatualizada.
 
 ## Política de indexação: etapa crítica
 
@@ -91,7 +78,7 @@ ESTRATEGIA-SEO.md        Auditoria e execução de 90 dias
 
 ## Limitações
 
-- Não existe transferência automática do conteúdo nem dos assets do site original: o Premium V3 usa textos iniciais preparados para esta versão.
+- O acervo foi recuperado a partir de um snapshot Git. Revisão científica, fontes e direitos de mídia não são garantidos pela recuperação técnica.
 - O serviço conectado nesta conversa não tinha permissão de criar/inspecionar o projeto na conta Euvouserdoutor, apesar do projeto ter sido criado corretamente no CLI do Mac.
 - O repositório `JeefQueiroz/euvouserdoutor-premium` foi confirmado na API GitHub; possui a licença inicial. O script faz push preservando o histórico. Seu GitHub está atualmente configurado como público; avalie a visibilidade no próprio GitHub conforme sua preferência.
 - Métricas de Core Web Vitals e posições nos buscadores só podem ser afirmadas após deploy e coleta real.

@@ -7,10 +7,11 @@
     "node": ">=20"
   },
   "scripts": {
-    "build": "node build.mjs && node scripts/merge-legacy.mjs",
+    "build": "node build.mjs && node scripts/merge-legacy.mjs && node scripts/review-release.mjs",
     "test": "node --test tests/*.test.mjs",
     "check": "npm run build && npm test",
-    "video:import": "node scripts/import-video.mjs"
+    "video:import": "node scripts/import-video.mjs",
+    "release:inventory": "node scripts/review-release.mjs"
   },
   "dependencies": {
     "lucide-react": "^0.344.0",

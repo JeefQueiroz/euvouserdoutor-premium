@@ -12,3 +12,6 @@ Run 46069783285: Home 90/95, Notícias 75/96, Flashcards 85/98 (performance/aces
 
 ## Resultado medido após otimizações
 Run 46079533611: 38/38 testes, npm audit sem vulnerabilidades reportadas, Lighthouse mobile Home 99/95/100, Notícias 96/96/96, Flashcards 100/98/96 (performance/acessibilidade/boas práticas). LCP 1501/2253/1502 ms, CLS 0/0/0,00103. SEO 69 em preview não indexável. Ajustes adicionais: charset no início do head, nomes acessíveis do logo alinhados à legenda visível, links de artigos sem sobrescrever texto, hierarquia de títulos e contraste de botão/filtro e marcadores. A eficácia desses ajustes depende da nova execução; o relatório agora inclui seletores dos elementos que falham. Leitura visual do logo, revisão editorial e testes em navegadores reais continuam pendentes.
+
+## Controle editorial e publicação
+Inventário gerado em cada build e armazenado como artefato de CI, com gate de indexação por aprovação vinculada ao conteúdo. Não há aprovações presumidas. Ver `docs/EDITORIAL-REVIEW.md`. O antigo deploy-mac.sh não é mais um caminho de publicação; PRs empilhados e aprovação explícita são obrigatórios no fluxo documentado.
