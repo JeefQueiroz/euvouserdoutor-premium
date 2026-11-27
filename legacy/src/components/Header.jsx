@@ -22,7 +22,7 @@ export const Header = ({ currentView }) => {
   return (
     <header className="site-header evd-shared-header">
       <div className="evd-header-inner">
-        <a href="/" className="evd-brand" aria-label="Página inicial do EuvouserDoutor">
+        <a href="/" className="evd-brand" aria-label="EuvouserDoutor — SAÚDE · CIÊNCIA · EDUCAÇÃO — Página inicial">
           <span className="evd-brand-frame"><img src="/logo-euvouserdoutor.webp" alt="EuvouserDoutor" width="160" height="48" decoding="async" fetchPriority="high" /></span>
           <span className="evd-brand-caption">SAÚDE · CIÊNCIA · EDUCAÇÃO</span>
         </a>

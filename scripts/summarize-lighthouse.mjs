@@ -7,7 +7,7 @@ for(const route of ['home','noticias','flashcards']){
  const metrics=Object.fromEntries(['largest-contentful-paint','cumulative-layout-shift','total-blocking-time','first-contentful-paint'].map(k=>[k,r.audits[k]?.numericValue??null]));
  output.push({route,version:r.lighthouseVersion,scores,metrics});
  const lcp=r.audits['largest-contentful-paint-element']?.details?.items;
- const failed=Object.entries(r.audits).filter(([k,v])=>v.score!==null&&v.score<1&&v.scoreDisplayMode==='binary').map(([k,v])=>({id:k,title:v.title}));
+ const failed=Object.entries(r.audits).filter(([k,v])=>v.score!==null&&v.score<1&&v.scoreDisplayMode==='binary').map(([k,v])=>({id:k,title:v.title,nodes:(v.details?.items||[]).slice(0,8).map(item=>({selector:item.node?.selector,explanation:item.node?.explanation||item.explanation}))}));
  console.log('Lighthouse '+route+': '+JSON.stringify({scores,metrics}));
  console.log('Lighthouse diagnóstico '+route+': '+JSON.stringify({lcp:lcp??null,failed}).slice(0,8000));
 }

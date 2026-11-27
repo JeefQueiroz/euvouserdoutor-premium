@@ -822,7 +822,7 @@ export const News = ({ setView }) => {
               onClick={() => setSelectedCategory(cat)}
               className={`px-6 py-3 rounded-[22px] text-[10px] font-black uppercase tracking-widest transition-all ${
                 selectedCategory === cat 
-                ? 'bg-[#4F8CFF] text-white shadow-[0_0_20px_rgba(79,140,255,0.4)]' 
+                ? 'bg-[#4F8CFF] text-[#080A0F] shadow-[0_0_20px_rgba(79,140,255,0.4)]' 
                 : 'text-[#98A2B3] hover:text-white hover:bg-white/5'
               }`}
             >

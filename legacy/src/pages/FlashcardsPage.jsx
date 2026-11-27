@@ -44,11 +44,11 @@ export const FlashcardsPage = ({ setView, profileImg, telegram }) => (
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
             <div className="bg-white/[0.02] p-5 rounded-2xl border border-white/[0.05]">
-              <h4 className="font-black text-[#F8FAFC] mb-2 text-base">Estudo Tradicional</h4>
+              <h3 className="font-black text-[#F8FAFC] mb-2 text-base">Estudo Tradicional</h3>
               <p className="text-xs text-[#98A2B3] leading-relaxed font-medium">Gasto elevado de tempo criando resumos estáticos, com risco de sensação de domínio sem teste real de lembrança.</p>
             </div>
             <div className="bg-[#4F8CFF]/5 p-5 rounded-2xl border border-[#4F8CFF]/20">
-              <h4 className="font-black text-[#F8FAFC] mb-2 text-base">Flashcards Ativos</h4>
+              <h3 className="font-black text-[#F8FAFC] mb-2 text-base">Flashcards Ativos</h3>
               <p className="text-xs text-[#98A2B3] leading-relaxed font-medium">A repetição espaçada ajuda a distribuir novos contatos com o tema e favorece a retenção ao longo da preparação.</p>
             </div>
           </div>

@@ -84,7 +84,7 @@ function buildHead(routePath, meta, isArticle) {
   const type = isArticle ? 'article' : 'website';
   const published = isArticle ? isoDateFor(meta) : '';
   const jsonLd = buildJsonLd(routePath, meta, isArticle);
-  return `
+  return `<meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="${escapeHtml(meta.description)}" />
     <meta name="robots" content="${indexed ? 'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1' : 'noindex,nofollow'}" />

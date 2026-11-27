@@ -66,7 +66,7 @@ if (skip) {
     const dst = path.join(output, route.slice(1), 'index.html');
     fs.mkdirSync(path.dirname(dst), { recursive: true });
     let html = fs.readFileSync(src, 'utf8');
-    html = html.replace('</head>', '<meta charset="utf-8"><link rel="stylesheet" href="/assets/portal-bridge.css"><link rel="stylesheet" href="/assets/motion.css"><link rel="stylesheet" href="/assets/legacy-shell.css"></head>');
+    html = html.replace('</head>', '<link rel="stylesheet" href="/assets/portal-bridge.css"><link rel="stylesheet" href="/assets/motion.css"><link rel="stylesheet" href="/assets/legacy-shell.css"></head>');
     if (!indexed) html = html.replace(/<meta name="robots" content="[^"]*"\s*\/>/, '<meta name="robots" content="noindex,nofollow" />');
     fs.writeFileSync(dst, html);
     imported.push(route);
