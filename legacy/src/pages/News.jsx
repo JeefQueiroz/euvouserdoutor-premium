@@ -840,7 +840,7 @@ export const News = ({ setView }) => {
               <a
                 href={featuredPost.href}
                 data-news-entry={featuredPost.target}
-                className="w-full text-left group cursor-pointer relative rounded-[48px] overflow-hidden border border-white/[0.05] bg-[#11141A] hover-lift transition-all duration-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4F8CFF]"
+                className="block w-full text-left group cursor-pointer relative rounded-[48px] overflow-hidden border border-white/[0.05] bg-[#11141A] hover-lift transition-all duration-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4F8CFF]"
               >
                 <div className="grid grid-cols-1 md:grid-cols-2">
                   <div className="aspect-[4/3] md:aspect-auto overflow-hidden relative">

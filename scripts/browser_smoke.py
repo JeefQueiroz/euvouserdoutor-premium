@@ -29,6 +29,7 @@ try:
             page=browser.new_page(viewport=viewport,device_scale_factor=1)
             errors=[]
             page.on("pageerror",lambda e:errors.append(str(e)))
+            page.on("console",lambda msg:errors.append(msg.text) if msg.type=="error" and "EVD hydration:" in msg.text else None)
             page.goto(base+"/",wait_until="networkidle")
             assert "Conhecimento que" in page.locator("main").inner_text()
             plate=page.locator(".science-plate")

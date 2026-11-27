@@ -12,10 +12,11 @@ export const getCookieConsent = () => {
 };
 
 export function CookieConsent({ setView }) {
-  const [choice, setChoice] = useState(() => getCookieConsent());
+  const [choice, setChoice] = useState(null);
   const [showOptions, setShowOptions] = useState(false);
 
   useEffect(() => {
+    setChoice(getCookieConsent());
     const openPreferences = () => {
       try { window.localStorage.removeItem(STORAGE_KEY); } catch { /* Preferences remain available for this page. */ }
       setChoice(null);

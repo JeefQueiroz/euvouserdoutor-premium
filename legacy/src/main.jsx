@@ -7,7 +7,15 @@ import './styles.css';
 const rootElement = document.getElementById('root');
 const view = pathToView[normalizeRoutePath(window.location.pathname)];
 function mount(BlogPostComponent) {
-  ReactDOM.createRoot(rootElement).render(<App BlogPostComponent={BlogPostComponent} />);
+  const app = <App BlogPostComponent={BlogPostComponent} />;
+  // Keep the server-rendered first paint on the two measured learning/news routes.
+  if ((view === 'news' || view === 'flashcards') && rootElement.hasChildNodes()) {
+    ReactDOM.hydrateRoot(rootElement, app, {
+      onRecoverableError: error => console.error('EVD hydration:', error.message)
+    });
+  } else {
+    ReactDOM.createRoot(rootElement).render(app);
+  }
 }
 // Keep the prerendered article readable while its interactive code downloads.
 // Study and newsroom routes never request the large article body module.

@@ -4,7 +4,7 @@ import { FlashcardStudy } from '../components/FlashcardStudy';
 import '../study/study.css';
 
 export const FlashcardsPage = ({ setView, profileImg, telegram }) => (
-  <div className="animate-in pb-20 text-left bg-[#080A0F] text-[#F8FAFC] min-h-screen">
+  <div className="pb-20 text-left bg-[#080A0F] text-[#F8FAFC] min-h-screen">
     <div className="bg-[#0A192F] border-b border-white/[0.05] pt-12 pb-20 px-6 text-left relative overflow-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_0%,rgba(79,140,255,0.12),transparent_40%)]" />
       
