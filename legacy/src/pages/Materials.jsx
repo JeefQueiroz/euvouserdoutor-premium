@@ -5,14 +5,14 @@ import { Sidebar } from '../components/Sidebar';
 export const Materials = ({ setView }) => {
   const materials = [
     {
-      title: 'Manual de Flashcards Doutor',
-      description: 'O guia definitivo para dominar a Recuperação Ativa e a Repetição Espaçada na preparação para Medicina.',
+      title: 'Flashcards Doutor — revisão interativa',
+      description: 'Pratique recuperação ativa e repetição espaçada com cartas de estudo e progresso local.',
       methodology: 'Active Recall & Spaced Repetition',
       category: 'Flashcards',
       badge: 'Gratuito',
       icon: Layers,
       target: 'flashcards',
-      stats: '15 min de leitura'
+      stats: '12 cartas'
     },
     {
       title: 'Cronograma Estratégico UFMG',

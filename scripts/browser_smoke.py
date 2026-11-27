@@ -82,6 +82,16 @@ try:
                 page.goto(base+route,wait_until="networkidle")
                 assert needle.casefold() in page.locator("body").inner_text().casefold(),f"Texto ausente em {route}"
                 assert page.locator("main").count()>=1,f"Sem main em {route}"
+            page.goto(base+"/flashcards/",wait_until="networkidle")
+            page.locator("[data-study-start]").click()
+            assert page.locator("[data-study-question]").is_visible()
+            page.locator("[data-study-reveal]").click()
+            assert page.locator("[data-study-answer]").is_visible()
+            page.locator("[data-study-rate='good']").click()
+            page.reload(wait_until="networkidle")
+            page.wait_for_function("document.querySelector('[data-study-due]')?.textContent.startsWith('11 cartas')")
+            assert not page.evaluate("document.documentElement.scrollWidth > window.innerWidth + 3"),"Overflow nos flashcards"
+            page.screenshot(path=str(capture/f"flashcards-{label}.png"),full_page=False)
             page.goto(base+"/noticias/bacterias-lingua-velocidade-raciocinio-2026/",wait_until="networkidle")
             assert "bact" in page.locator("body").inner_text().casefold()
             page.screenshot(path=str(capture/f"artigo-{label}.png"),full_page=False)
