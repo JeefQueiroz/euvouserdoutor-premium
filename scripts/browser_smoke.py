@@ -128,6 +128,14 @@ try:
             assert page.locator("[data-lab-step='1']").get_attribute("aria-pressed")=="true"
             assert not page.evaluate("document.documentElement.scrollWidth > window.innerWidth + 3"),"Overflow no laboratório"
             page.screenshot(path=str(capture/f"laboratorio-{label}.png"),full_page=False)
+            page.goto(base+"/videos.html",wait_until="networkidle")
+            assert page.locator("[data-video-library]").is_visible()
+            assert page.locator("video[autoplay]").count()==0
+            for video in page.locator("video").all():
+                assert video.get_attribute("preload")=="none"
+                assert video.locator("track[kind=captions]").count()==1
+            assert not page.evaluate("document.documentElement.scrollWidth > window.innerWidth + 3"),"Overflow em videos"
+            page.screenshot(path=str(capture/f"videos-{label}.png"),full_page=False)
             page.goto(base+"/noticias/cancer-cabeca-pesco%C3%A7o-quimio-imunoterapia-2026/",wait_until="networkidle")
             assert "pescoço" in page.locator("main").inner_text().casefold(), "Rota acentuada nao renderizou a materia"
             page.goto(base+"/noticias/bacterias-lingua-velocidade-raciocinio-2026/",wait_until="networkidle")

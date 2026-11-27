@@ -40,3 +40,6 @@ Rota `/questoes` integrada ao acervo, busca e biblioteca. Nove questões origina
 
 ## Laboratório científico
 Rota `/laboratorio`: dois mecanismos introdutórios (circulação e trocas alveolares), com esquemas SVG próprios e explicação textual equivalente. Reutiliza o layout, selects nativos e controles de estudo. Azul e vermelho indicam oxigenação ou direção de difusão conforme a legenda, nunca uma representação de cor real do sangue. Realce de uma etapa por ação, animação única de fluxo e preferência de movimento reduzido respeitada. Sem autoplay, WebGL, dados pessoais ou pretensão de precisão anatômica; revisão didática antes da indexação.
+
+## Biblioteca audiovisual
+`/videos` usa player nativo, capa vertical, legendas pt-BR e transcrição. Sem autoplay, dependências ou vídeo na Home; estado vazio explícito e não indexado. Publicação somente de arquivos reais ligados a metadados de aprovação e hashes. Contrato local: `docs/VIDEO.md`. O motor de renderização externo permanece independente.
