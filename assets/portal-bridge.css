@@ -1,0 +1,18 @@
+.evd-premium-bridge{font:700 12px/1.4 system-ui,-apple-system,"Segoe UI",sans-serif;background:#eaf0fc;color:#153157;border-bottom:1px solid #d4e1f5;position:relative;z-index:70}
+.evd-premium-bridge-inner{max-width:1180px;margin:auto;min-height:43px;display:flex;align-items:center;justify-content:space-between;gap:15px;padding:8px 20px}
+.evd-premium-bridge strong{font-size:12px;letter-spacing:.015em}
+.evd-premium-bridge-links{display:flex;align-items:center;gap:18px;white-space:nowrap}
+.evd-premium-bridge a{color:#2455a5;text-decoration:none;font-weight:750}
+.evd-premium-bridge a:hover{text-decoration:underline}
+.evd-premium-bridge a:focus-visible{outline:3px solid #5478f3;outline-offset:3px}
+#cookie-consent>div{padding-top:12px;padding-bottom:12px;gap:10px}
+#cookie-consent button{min-height:39px;padding:8px 11px;font-size:10px;letter-spacing:.025em;line-height:1.25}
+@media(max-width:720px){
+ .evd-premium-bridge-inner{padding:9px 14px;gap:8px}
+ .evd-premium-bridge strong{font-size:11px}
+ .evd-premium-bridge-links{gap:12px}
+ .evd-premium-bridge-links a{font-size:11px}
+ #cookie-consent>div{padding:11px 15px;gap:8px}
+ #cookie-consent>div>div:last-child{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+ #cookie-consent button{min-height:37px;padding:7px 9px}
+}
