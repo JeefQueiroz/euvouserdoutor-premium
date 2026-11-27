@@ -10,7 +10,7 @@ export const Header = ({ currentView }) => {
     const onKey = event => {
       if (event.key === 'Escape' && open) { setOpen(false); toggle.current?.focus(); }
     };
-    const onResize = () => { if (window.innerWidth > 760) setOpen(false); };
+    const onResize = () => { if (window.innerWidth > 900) setOpen(false); };
     document.addEventListener('keydown', onKey);
     window.addEventListener('resize', onResize);
     return () => {

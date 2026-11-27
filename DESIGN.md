@@ -12,10 +12,10 @@ Tipografia: sistema sem download externo; título 42–86px com espaçamento com
 Logotipo original otimizado (14 KB WebP) dentro de placa azul, em vez do símbolo + genérico. Elemento editorial característico: seção “Explore o portal completo”, que reúne de maneira legível notícias, materiais, flashcards e mentoria. Evitar números decorativos e menus excessivamente amplos.
 
 ## UX e limites
-- Navegação: até 6 destinos no desktop + busca, menu expansível no mobile, estado da página atual e foco visível.
+- Navegação: Home, seis destinos editoriais e busca no desktop, menu expansível no mobile, estado da página atual e foco visível.
 - Busca global: consulta índice estático no mesmo domínio (sem backend ou rastreamento); filtra por tipo; protege contra injeção usando somente `textContent`.
 - Conteúdo YMYL: fontes, autoria, datas e aviso informativo; nenhuma alegação de revisão médica sem prova.
-- Acervo React legado permanece nas rotas antigas, com faixa discreta para retornar ao portal Premium.
+- Acervo React legado permanece nas rotas antigas, com Home no cabeçalho compartilhado.
 - Performance: a home não importa React, fontes remotas ou bibliotecas de ícones. A busca carrega script extra apenas na página de pesquisa.
 - Acessibilidade: pt-BR, links semânticos, alvos de toque >= 44px, controle por teclado e `prefers-reduced-motion`.
 - Prévia: noindex até revisão das rotas e do domínio canônico. Não há corte automático do domínio público.
@@ -24,7 +24,7 @@ Logotipo original otimizado (14 KB WebP) dentro de placa azul, em vez do símbol
 A camada compartilhada `assets/motion.css` define durações e curvas sem dependências adicionais, carregada também no legado. A animação destaca estado e hierarquia; conteúdo principal é visível desde o primeiro frame. Respeitar movimento reduzido e dispositivos sem hover. Diretrizes e critérios: `docs/MOTION.md`.
 
 ## Navegação unificada
-`src/navigation.mjs` define os destinos públicos usados pelo Premium e pelo React. O cabeçalho legado usa links HTML reais e a busca global `/busca` em vez de um índice local de seis sugestões. `assets/legacy-shell.css` aproxima cabeçalho e rodapé da identidade Premium sem alterar o tema dos artigos. A faixa de retorno continua nesta etapa para compatibilidade e poderá ser removida após validação. Links institucionais e preferências de cookies permanecem disponíveis.
+`src/navigation.mjs` define os destinos públicos usados pelo Premium e pelo React. O cabeçalho legado usa links HTML reais e a busca global `/busca` em vez de um índice local de seis sugestões. `assets/legacy-shell.css` aproxima cabeçalho e rodapé da identidade Premium sem alterar o tema dos artigos. A faixa duplicada foi removida a pedido do responsável pelo portal. Home é o primeiro link, antes de Notícias; menu recolhível até 900 px. Links institucionais e preferências de cookies permanecem disponíveis.
 
 ## Assinatura científica da Home
 O hero usa uma ilustração vetorial original da dupla hélice do DNA em azul, violeta e teal, apresentada explicitamente como esquema, não como modelo molecular de precisão. Uma única composição focal; sem etiquetas decorativas, contadores ou fundos animados contínuos. Imagem estática com dimensões intrínsecas e movimento breve opcional. Não modificar logotipo, navegação ou textos médicos nesta fase.

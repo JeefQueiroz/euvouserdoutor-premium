@@ -65,9 +65,7 @@ if (skip) {
     const dst = path.join(output, route.slice(1), 'index.html');
     fs.mkdirSync(path.dirname(dst), { recursive: true });
     let html = fs.readFileSync(src, 'utf8');
-    const bridge = '<nav class="evd-premium-bridge" aria-label="Navegação entre portal e acervo"><div class="evd-premium-bridge-inner"><strong><a href="/">← Voltar ao Premium</a></strong><div class="evd-premium-bridge-links"><a href="/busca">Busca global</a><a href="/materiais">Materiais</a></div></div></nav>';
     html = html.replace('</head>', '<meta charset="utf-8"><link rel="stylesheet" href="/assets/portal-bridge.css"><link rel="stylesheet" href="/assets/motion.css"><link rel="stylesheet" href="/assets/legacy-shell.css"></head>');
-    html = html.replace(/<body([^>]*)>/i, '<body$1>' + bridge);
     if (!indexed) html = html.replace(/<meta name="robots" content="[^"]*"\s*\/>/, '<meta name="robots" content="noindex,nofollow" />');
     fs.writeFileSync(dst, html);
     imported.push(route);

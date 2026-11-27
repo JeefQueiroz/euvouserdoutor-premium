@@ -14,7 +14,7 @@
   transition-duration: var(--evd-motion-ui);
   transition-timing-function: var(--evd-ease-land);
 }
-.primary-nav a, .evd-premium-bridge a, .portal-search-form button {
+.primary-nav a, .portal-search-form button {
   transition: color var(--evd-motion-fast) var(--evd-ease-land),
               background-color var(--evd-motion-fast) var(--evd-ease-land),
               border-color var(--evd-motion-fast) var(--evd-ease-land);
@@ -38,7 +38,7 @@
   .scientific-hero .science-plate {
     animation: evd-hero-arrive var(--evd-motion-hero) var(--evd-ease-land) both;
   }
-  @media (max-width: 760px) {
+  @media (max-width: 900px) {
     .primary-nav.is-open {
       animation: evd-panel-enter var(--evd-motion-panel) var(--evd-ease-land) both;
     }
@@ -52,7 +52,7 @@
   html { scroll-behavior: auto !important; }
   .scientific-hero .science-plate, .primary-nav.is-open { animation: none !important; }
   .btn, .journey-card, .article-card, .portal-hub-link, .portal-result-card,
-  .primary-nav a, .evd-premium-bridge a, .portal-search-form button {
+  .primary-nav a, .portal-search-form button {
     transition: none !important;
   }
   .btn:hover, .btn:active, .journey-card:hover, .article-card:hover,

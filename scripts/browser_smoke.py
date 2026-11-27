@@ -50,9 +50,11 @@ try:
             assert page.locator(".portal-result-card").count() >= 1, "Filtro de notícias sem resultados"
             page.screenshot(path=str(capture/f"busca-{label}.png"),full_page=False)
             page.goto(base+"/noticias/",wait_until="networkidle")
-            assert "Voltar ao Premium" in page.locator(".evd-premium-bridge").inner_text()
+            assert page.locator(".evd-premium-bridge").count()==0, "Faixa duplicada retornou"
             nav=page.locator(".evd-shared-header nav")
             assert nav.locator('a[href="/busca"]').count()==1
+            assert nav.locator("a").nth(0).inner_text() == "Home"
+            assert nav.locator("a").nth(1).inner_text() == "Notícias"
             assert nav.locator('a[href="/noticias"][aria-current="page"]').count()==1
             if label=="mobile":
                 legacy_toggle=page.locator(".evd-menu-toggle")
@@ -145,13 +147,25 @@ try:
         toggle.click()
         assert toggle.get_attribute("aria-expanded")=="false"
         reduced.goto(base+"/noticias/",wait_until="networkidle")
-        assert reduced.locator(".evd-premium-bridge").is_visible()
-        assert reduced.locator(".evd-premium-bridge a").first.evaluate("(el)=>getComputedStyle(el).transitionDuration") == "0s"
+        assert reduced.locator(".evd-premium-bridge").count()==0
+        reduced.locator(".evd-menu-toggle").click()
+        assert reduced.locator("#primary-navigation a").first.evaluate("(el)=>getComputedStyle(el).transitionDuration") == "0s"
+        reduced.locator("#primary-navigation a").first.click()
+        assert "Conhecimento que" in reduced.locator("main").inner_text()
         reduced.goto(base+"/laboratorio/",wait_until="networkidle")
         assert reduced.locator(".evd-lab-trace").evaluate("(el)=>getComputedStyle(el).animationName")=="none"
         assert reduced.locator("[data-lab-description]").is_visible()
         reduced.close()
-        print("Movimento reduzido: home, menu e ponte legada OK")
+        print("Movimento reduzido: home e navegação compartilhada OK")
+        for width in [800, 900, 901, 1024]:
+            tablet=browser.new_page(viewport={"width":width,"height":900})
+            for route,toggle_selector in [("/","[data-menu-button]"),("/noticias/",".evd-menu-toggle")]:
+                tablet.goto(base+route,wait_until="networkidle")
+                assert not tablet.evaluate("document.documentElement.scrollWidth > window.innerWidth + 3"),f"Overflow de navegação em {width}: {route}"
+                if width<=900: tablet.locator(toggle_selector).click()
+                assert tablet.locator("#primary-navigation a").first.is_visible()
+                assert tablet.locator("#primary-navigation a").first.inner_text()=="Home"
+            tablet.close()
         browser.close()
 finally:
     server.terminate()
