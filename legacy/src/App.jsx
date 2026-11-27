@@ -39,8 +39,13 @@ export default function App({ initialPath }) {
       return;
     }
 
-    setView(nextView);
     const path = routeMeta[nextView].path;
+    // Cross into canonical static pages via real navigation, not a legacy SPA copy.
+    if (['home','author','contact','about'].includes(nextView)) {
+      window.location.assign(path);
+      return;
+    }
+    setView(nextView);
     if (window.location.pathname !== path) {
       window.history.pushState({}, '', path);
     }

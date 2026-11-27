@@ -22,3 +22,6 @@ Logotipo original otimizado (14 KB WebP) dentro de placa azul, em vez do símbol
 
 ## Movimento
 A camada compartilhada `assets/motion.css` define durações e curvas sem dependências adicionais, carregada também no legado. A animação destaca estado e hierarquia; conteúdo principal é visível desde o primeiro frame. Respeitar movimento reduzido e dispositivos sem hover. Diretrizes e critérios: `docs/MOTION.md`.
+
+## Navegação unificada
+`src/navigation.mjs` define os destinos públicos usados pelo Premium e pelo React. O cabeçalho legado usa links HTML reais e a busca global `/busca` em vez de um índice local de seis sugestões. `assets/legacy-shell.css` aproxima cabeçalho e rodapé da identidade Premium sem alterar o tema dos artigos. A faixa de retorno continua nesta etapa para compatibilidade e poderá ser removida após validação. Links institucionais e preferências de cookies permanecem disponíveis.

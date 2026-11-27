@@ -47,6 +47,18 @@ try:
             page.screenshot(path=str(capture/f"busca-{label}.png"),full_page=False)
             page.goto(base+"/noticias/",wait_until="networkidle")
             assert "Voltar ao Premium" in page.locator(".evd-premium-bridge").inner_text()
+            nav=page.locator(".evd-shared-header nav")
+            assert nav.locator('a[href="/busca"]').count()==1
+            assert nav.locator('a[href="/noticias"][aria-current="page"]').count()==1
+            if label=="mobile":
+                legacy_toggle=page.locator(".evd-menu-toggle")
+                legacy_toggle.click()
+                assert nav.is_visible()
+                page.keyboard.press("Escape")
+                assert legacy_toggle.get_attribute("aria-expanded")=="false"
+                assert legacy_toggle.evaluate("(el)=>document.activeElement===el")
+            assert not page.evaluate("document.documentElement.scrollWidth > window.innerWidth + 3"),"Overflow horizontal no acervo"
+            assert page.locator(".evd-shared-footer a[href='/busca']").count()==1
             if label == "mobile":
                 cookie_box=page.locator("#cookie-consent")
                 assert cookie_box.count() == 1
