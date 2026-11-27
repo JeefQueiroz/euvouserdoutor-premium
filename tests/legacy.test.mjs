@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
+import {resolveSitePolicy} from '../src/site-policy.mjs';
 const out = path.resolve('dist');
 const restored = path.join(out, 'legacy-parity.json');
 const skipped = process.env.SKIP_LEGACY === 'true';
@@ -21,7 +22,7 @@ test('restaura as rotas e protege a indexacao de homologacao', {skip:skipped}, (
     const html = fs.readFileSync(path.join(out,route.slice(1),'index.html'),'utf8');
     assert.match(html, /<h1|<h2/);
     assert.match(html, /<script[^>]*src=/);
-    if(process.env.PUBLIC_INDEXING !== 'true') assert.match(html, /content="noindex,nofollow"/);
+    if(!resolveSitePolicy().indexed) assert.match(html, /content="noindex,nofollow"/);
   }
   assert.ok(m.imported.filter(x=>x.startsWith('/noticias/')).length >= 50, 'Noticias antigas nao foram restauradas.');
   assert.ok(fs.existsSync(path.join(out, 'assets','site.css')), 'Premium principal foi perdido.');
@@ -30,7 +31,7 @@ test('restaura as rotas e protege a indexacao de homologacao', {skip:skipped}, (
 
 test('protege todas as rotas restauradas contra indexacao prematura e exclui area administrativa', {skip:skipped}, () => {
   const { imported } = JSON.parse(fs.readFileSync(restored, 'utf8'));
-  const indexed = process.env.PUBLIC_INDEXING === 'true' && process.env.SITE_URL?.startsWith('https://');
+  const {indexed}=resolveSitePolicy();
   assert.ok(!imported.some(route => route === '/admin' || route.startsWith('/admin/')), 'Rota administrativa nao pode integrar o portal publico');
   for (const route of imported) {
     const html = fs.readFileSync(path.join(out, route.slice(1), 'index.html'), 'utf8');

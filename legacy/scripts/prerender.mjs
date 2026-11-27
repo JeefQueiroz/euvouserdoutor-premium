@@ -2,6 +2,8 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { render, institutional, routeMeta, pathToView } from '../dist-server/entry-server.js';
+import {resolveSitePolicy, canonicalUrl} from '../../src/site-policy.mjs';
+const {siteUrl,indexed}=resolveSitePolicy();
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(root, '..');
@@ -16,7 +18,7 @@ const escapeHtml = (value = '') => String(value)
 
 const jsonForHtml = (value) => JSON.stringify(value).replaceAll('<', '\\u003c');
 
-const absoluteUrl = (routePath) => `${institutional.site}${routePath === '/' ? '' : routePath}`;
+const absoluteUrl = (routePath) => canonicalUrl(siteUrl,routePath);
 
 const validIsoDate = (value) => typeof value === 'string' && !Number.isNaN(Date.parse(value)) ? value : null;
 const isoDateFor = (meta) => validIsoDate(meta.datePublished);
@@ -24,16 +26,16 @@ const isoDateFor = (meta) => validIsoDate(meta.datePublished);
 function buildJsonLd(routePath, meta, isArticle) {
   const canonical = absoluteUrl(routePath);
   const image = absoluteUrl(meta.image || '/logo-euvouserdoutor.webp');
-  const authorId = `${institutional.site}/autor/jeff-queiroz#person`;
-  const organizationId = `${institutional.site}/#organization`;
+  const authorId = `${siteUrl}/autor/jeff-queiroz#person`;
+  const organizationId = `${siteUrl}/#organization`;
   const graph = [
     {
       '@type': 'Organization',
       '@id': organizationId,
       name: 'EuvouserDoutor',
       legalName: 'EuvouserDoutor',
-      url: institutional.site,
-      logo: `${institutional.site}/logo-euvouserdoutor.webp`,
+      url: siteUrl,
+      logo: `${siteUrl}/logo-euvouserdoutor.webp`,
       founder: { '@id': authorId },
       sameAs: [institutional.instagram, institutional.facebook, institutional.youtube, institutional.telegram, institutional.linkedin, institutional.pinterest].filter(Boolean),
     },
@@ -42,8 +44,8 @@ function buildJsonLd(routePath, meta, isArticle) {
       '@id': authorId,
       name: 'Jeff Queiroz',
       alternateName: 'Jefferson Viana Queiroz',
-      url: `${institutional.site}/autor/jeff-queiroz`,
-      image: `${institutional.site}/jeff-queiroz-perfil.webp`,
+      url: `${siteUrl}/autor/jeff-queiroz`,
+      image: `${siteUrl}/jeff-queiroz-perfil.webp`,
       worksFor: { '@id': organizationId },
       sameAs: [institutional.instagram, institutional.linkedin].filter(Boolean),
     },
@@ -66,8 +68,8 @@ function buildJsonLd(routePath, meta, isArticle) {
       '@type': 'BreadcrumbList',
       '@id': `${canonical}#breadcrumb`,
       itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'Início', item: `${institutional.site}/` },
-        ...(routePath.startsWith('/noticias') ? [{ '@type': 'ListItem', position: 2, name: 'Notícias', item: `${institutional.site}/noticias` }] : []),
+        { '@type': 'ListItem', position: 1, name: 'Início', item: `${siteUrl}/` },
+        ...(routePath.startsWith('/noticias') ? [{ '@type': 'ListItem', position: 2, name: 'Notícias', item: `${siteUrl}/noticias` }] : []),
         ...(isArticle ? [{ '@type': 'ListItem', position: 3, name: meta.title, item: canonical }] : []),
       ],
     },
@@ -78,14 +80,14 @@ function buildJsonLd(routePath, meta, isArticle) {
 function buildHead(routePath, meta, isArticle) {
   const canonical = absoluteUrl(routePath);
   const image = absoluteUrl(meta.image || '/logo-euvouserdoutor.webp');
-  const lcpImage = routePath === '/' ? `${institutional.site}/jeff-queiroz-perfil.webp` : null;
+  const lcpImage = routePath === '/' ? `${siteUrl}/jeff-queiroz-perfil.webp` : null;
   const type = isArticle ? 'article' : 'website';
   const published = isArticle ? isoDateFor(meta) : '';
   const jsonLd = buildJsonLd(routePath, meta, isArticle);
   return `
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="${escapeHtml(meta.description)}" />
-    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="robots" content="${indexed ? 'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1' : 'noindex,nofollow'}" />
     <link rel="canonical" href="${escapeHtml(canonical)}" />
     <meta property="og:type" content="${type}" />
     <meta property="og:locale" content="pt_BR" />

@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
+import {resolveSitePolicy,canonicalUrl} from '../src/site-policy.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const legacy = path.join(root, 'legacy');
@@ -56,7 +57,7 @@ if (skip) {
   const xml = fs.readFileSync(path.join(legacy, 'dist', 'sitemap.xml'), 'utf8');
   const routes = [...new Set([...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => decodeURI(new URL(m[1]).pathname)))];
   const imported = [];
-  const indexed = process.env.PUBLIC_INDEXING === 'true' && process.env.SITE_URL?.startsWith('https://');
+  const {indexed,siteUrl}=resolveSitePolicy();
   for (const route of routes) {
     if (route === '/' || route === '/admin') continue;
     const src = path.join(legacy, 'dist', route.slice(1), 'index.html');
@@ -76,8 +77,7 @@ if (skip) {
   if (indexed) {
     const filename = path.join(output, 'sitemap.xml');
     const premium = fs.readFileSync(filename, 'utf8');
-    const base = process.env.SITE_URL.replace(/\/$/, '');
-    const entries = imported.filter(x => x.startsWith('/noticias')).map(x => '<url><loc>' + base + x + '</loc></url>').join('');
+    const entries = imported.map(x => '<url><loc>' + canonicalUrl(siteUrl,x) + '</loc></url>').join('');
     fs.writeFileSync(filename, premium.replace('</urlset>', entries + '</urlset>'));
   }
 

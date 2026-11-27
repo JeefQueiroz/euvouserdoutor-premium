@@ -53,6 +53,9 @@ try:
             page.on("request",lambda request:requested.append(request.url))
             page.goto(base+"/noticias/",wait_until="networkidle")
             assert not any("/assets/BlogPost-" in url for url in requested), "Carregamento precoce de artigos"
+            expected_origin=os.environ.get("SITE_URL","") if os.environ.get("VERCEL_ENV")=="production" and os.environ.get("PUBLIC_INDEXING")=="true" and os.environ.get("SITE_URL","").rstrip("/")=="https://www.euvouserdoutor.com" else "https://euvouserdoutor-premium-v3.vercel.app"
+            assert page.locator('link[rel="canonical"]').get_attribute("href")==expected_origin.rstrip("/")+"/noticias"
+            assert page.locator('meta[property="og:url"]').get_attribute("content")==expected_origin.rstrip("/")+"/noticias"
             assert page.locator(".evd-premium-bridge").count()==0, "Faixa duplicada retornou"
             nav=page.locator(".evd-shared-header nav")
             assert nav.locator('a[href="/busca"]').count()==1
@@ -142,6 +145,7 @@ try:
             page.goto(base+"/noticias/cancer-cabeca-pesco%C3%A7o-quimio-imunoterapia-2026/",wait_until="networkidle")
             assert "pescoço" in page.locator("main").inner_text().casefold(), "Rota acentuada nao renderizou a materia"
             assert any("/assets/BlogPost-" in url for url in requested), "Modulo de artigo nao carregado"
+            assert page.locator('link[rel="canonical"]').get_attribute("href")==expected_origin.rstrip("/")+"/noticias/cancer-cabeca-pesco%C3%A7o-quimio-imunoterapia-2026"
             page.goto(base+"/noticias/bacterias-lingua-velocidade-raciocinio-2026/",wait_until="networkidle")
             assert "bact" in page.locator("body").inner_text().casefold()
             page.screenshot(path=str(capture/f"artigo-{label}.png"),full_page=False)

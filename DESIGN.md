@@ -46,3 +46,6 @@ Rota `/laboratorio`: dois mecanismos introdutórios (circulação e trocas alveo
 
 ## Desempenho do legado
 Corpos das notícias são importados sob demanda no navegador; o SSR conserva o componente síncrono para gerar HTML completo. Nas páginas de estudo e listagem, o módulo de artigos não integra o grafo estático. Falha no download mantém o texto pré-renderizado e oferece recarregamento. A navegação para notícias individuais usa carregamento de página real. O CI verifica o manifesto Vite, orçamento de 350 kB do chunk de entrada e requisições em Chromium; não equivale a métricas de Core Web Vitals em campo. Todas as rotas legadas oferecem link de salto ao conteúdo.
+
+## SEO e gate de publicação
+`src/site-policy.mjs` centraliza domínio canônico e indexação. Somente produção Vercel, flag explícita e domínio público exato habilitam indexação. Pré-renderizadores Premium e legado compartilham a política; React preserva os metadados do documento, em vez de reconstruir JSON-LD divergente. URLs históricas são codificadas para metadados e sitemap sem mudar sua rota de arquivo. O sitemap público inclui rotas restauradas; busca e biblioteca audiovisual vazia ficam excluídas. A mudança de domínio e ativação real permanecem fora do escopo.

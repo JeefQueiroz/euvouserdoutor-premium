@@ -3,17 +3,17 @@ import path from 'node:path';
 import { brand, categories, articles } from './src/content.mjs';
 import { navLinks, currentSection } from './src/navigation.mjs';
 import { readCatalog } from './src/video-catalog.mjs';
+import { resolveSitePolicy, canonicalUrl } from './src/site-policy.mjs';
 
 const root = process.cwd();
 const videoCatalog = readCatalog(root);
 const output = path.join(root, 'dist');
-const siteUrl = (process.env.SITE_URL || 'https://euvouserdoutor-premium-v3.vercel.app').replace(/\/$/, '');
-const indexed = process.env.PUBLIC_INDEXING === 'true' && process.env.SITE_URL?.startsWith('https://');
+const {siteUrl,indexed} = resolveSitePolicy();
 const date = '2026-11-07'; // Conteúdo inicial criado nesta data; atualizar somente ao revisar editorialmente.
 const categoryBySlug = Object.fromEntries(categories.map((item) => [item.slug, item]));
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const strip = s => s.replace(/<[^>]*>/g,'');
-const abs = route => siteUrl + (route === '/' ? '/' : route);
+const abs = route => route.includes('#') ? siteUrl+route : canonicalUrl(siteUrl,route);
 const internal = (url, label, klass='', extra='') => `<a href="${esc(url)}" ${klass ? `class="${klass}"` : ''} ${extra}>${label}</a>`;
 const external = (url, label) => `<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(label)} <span aria-hidden="true">↗</span></a>`;
 const jsonLd = data => `<script type="application/ld+json">${JSON.stringify(data).replace(/</g,'\\u003c')}</script>`;

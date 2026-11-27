@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { articles, categories } from '../src/content.mjs';
+import {resolveSitePolicy} from '../src/site-policy.mjs';
 const out = path.resolve('dist');
 const read = p => fs.readFileSync(path.join(out,p),'utf8');
 const allPages = ['index.html','artigos.html','videos.html',...categories.map(x=>x.slug+'.html'),...articles.map(x=>'artigos/'+x.slug+'.html'),'sobre.html','politica-editorial.html','aviso-medico.html','privacidade.html','contato.html'];
@@ -24,10 +25,10 @@ test('all internal navigation targets resolve to generated pages or assets',()=>
  for(const page of allPages){for(const match of read(page).matchAll(/href="(\/[^"]*)"/g)){const raw=match[1];const href=raw.split('#')[0].split('?')[0];assert.ok(targets.has(href)||fs.existsSync(path.join(out,href.slice(1)))||fs.existsSync(path.join(out,href.slice(1)+'.html')),`broken link ${raw} in ${page}`)}}
 });
 test('public indexing is off by default, preview cannot compete with the main site',()=>{
- assert.match(read('index.html'),/content="noindex,nofollow"/);assert.match(read('robots.txt'),/Disallow: \//);
+ if(!resolveSitePolicy().indexed){assert.match(read('index.html'),/content="noindex,nofollow"/);assert.match(read('robots.txt'),/Disallow: \//);}else{assert.match(read('index.html'),/content="index,follow,/);assert.match(read('robots.txt'),/Allow: \//);}
 });
 test('sitemap and rss list real URLs and known articles',()=>{
- const map=read('sitemap.xml'),rss=read('feed.xml');assert.equal((map.match(/<url>/g)||[]).length,allPages.length-(JSON.parse(fs.readFileSync('src/videos.json','utf8')).length?0:1));assert.equal((rss.match(/<item>/g)||[]).length,articles.length);for(const item of articles)assert.ok(map.includes(item.slug));
+ const map=read('sitemap.xml'),rss=read('feed.xml');assert.equal((map.match(/<url>/g)||[]).length,allPages.length-(JSON.parse(fs.readFileSync('src/videos.json','utf8')).length?0:1)+(resolveSitePolicy().indexed&&process.env.SKIP_LEGACY!=='true'?JSON.parse(read('legacy-parity.json')).imported.length:0));assert.equal((rss.match(/<item>/g)||[]).length,articles.length);for(const item of articles)assert.ok(map.includes(item.slug));
 });
 test('no external runtime dependencies, bundles remain lightweight',()=>{
  const css=fs.statSync(path.join(out,'assets/site.css')).size;const js=fs.statSync(path.join(out,'assets/site.js')).size;assert.ok(css<35000,`css ${css}`);assert.ok(js<5000,`js ${js}`);for(const file of allPages)assert.ok(!read(file).includes('https://fonts.googleapis.com'));

@@ -51,7 +51,7 @@ O projeto tem dois estados:
 
 ### Homologação (padrão)
 
-`PUBLIC_INDEXING` ausente ou diferente de `true` gera `noindex,nofollow` e robots.txt com `Disallow: /` para evitar concorrência com o portal original.
+O modo seguro é padrão: `noindex,nofollow`, robots.txt com `Disallow: /` e domínio canônico de homologação em ambas as arquiteturas. A indexação exige simultaneamente `VERCEL_ENV=production` (fornecida pela Vercel), `PUBLIC_INDEXING=true` e `SITE_URL=https://www.euvouserdoutor.com`. Previews nunca indexam, mesmo com variáveis copiadas da produção.
 
 ### Lançamento público (somente após assumir o domínio canônico)
 
