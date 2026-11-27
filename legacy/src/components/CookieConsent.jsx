@@ -5,7 +5,10 @@ export const COOKIE_CONSENT_OPEN_EVENT = 'evsd-cookie-consent-open';
 
 export const getCookieConsent = () => {
   if (typeof window === 'undefined') return null;
-  return window.localStorage.getItem(STORAGE_KEY);
+  try {
+    const value = window.localStorage.getItem(STORAGE_KEY);
+    return value === 'accepted' || value === 'rejected' ? value : null;
+  } catch { return null; }
 };
 
 export function CookieConsent({ setView }) {
@@ -14,7 +17,7 @@ export function CookieConsent({ setView }) {
 
   useEffect(() => {
     const openPreferences = () => {
-      window.localStorage.removeItem(STORAGE_KEY);
+      try { window.localStorage.removeItem(STORAGE_KEY); } catch { /* Preferences remain available for this page. */ }
       setChoice(null);
       setShowOptions(true);
     };
@@ -26,7 +29,7 @@ export function CookieConsent({ setView }) {
   if (choice) return null;
 
   const saveChoice = (value) => {
-    window.localStorage.setItem(STORAGE_KEY, value);
+    try { window.localStorage.setItem(STORAGE_KEY, value); } catch { /* Consent is retained in memory for this page only. */ }
     window.dispatchEvent(new CustomEvent('evsd-cookie-consent-changed', { detail: value }));
     setChoice(value);
   };
@@ -37,13 +40,12 @@ export function CookieConsent({ setView }) {
         <div className="max-w-3xl">
           <p className="text-sm font-bold mb-1">Uso de cookies</p>
           <p className="text-xs md:text-sm text-blue-100 leading-relaxed">
-            Usamos cookies necessários para o funcionamento do site. Cookies de análise só são ativados com seu
-            consentimento para melhorar conteúdo e navegação.
+            Guardamos sua preferência neste navegador quando o armazenamento está disponível. A análise de visitas está desativada nesta versão.
           </p>
           {showOptions && (
             <div className="mt-3 rounded-xl bg-white/5 border border-white/10 p-3 text-xs text-blue-100 space-y-2">
               <p><strong className="text-white">Necessários:</strong> sempre ativos para segurança e funcionamento básico.</p>
-              <p><strong className="text-white">Análise:</strong> ajudam a entender acessos e melhorar páginas. Ativados apenas se você aceitar.</p>
+              <p><strong className="text-white">Análise:</strong> desativada nesta versão, independentemente da preferência selecionada.</p>
             </div>
           )}
         </div>
@@ -54,7 +56,7 @@ export function CookieConsent({ setView }) {
           <button onClick={() => saveChoice('rejected')} className="bg-white/10 hover:bg-white/15 text-white px-4 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-colors">
             Recusar não essenciais
           </button>
-          <button onClick={() => setShowOptions((value) => !value)} className="border border-white/20 hover:bg-white/10 text-white px-4 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-colors">
+          <button aria-expanded={showOptions} onClick={() => setShowOptions((value) => !value)} className="border border-white/20 hover:bg-white/10 text-white px-4 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-colors">
             Gerenciar preferências
           </button>
           <button onClick={() => setView && setView('cookies')} className="text-blue-100 hover:text-white px-2 py-3 text-xs font-bold underline underline-offset-4">

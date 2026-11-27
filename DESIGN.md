@@ -49,3 +49,6 @@ Corpos das notícias são importados sob demanda no navegador; o SSR conserva o 
 
 ## SEO e gate de publicação
 `src/site-policy.mjs` centraliza domínio canônico e indexação. Somente produção Vercel, flag explícita e domínio público exato habilitam indexação. Pré-renderizadores Premium e legado compartilham a política; React preserva os metadados do documento, em vez de reconstruir JSON-LD divergente. URLs históricas são codificadas para metadados e sitemap sem mudar sua rota de arquivo. O sitemap público inclui rotas restauradas; busca e biblioteca audiovisual vazia ficam excluídas. A mudança de domínio e ativação real permanecem fora do escopo.
+
+## Auditoria pré-lançamento
+CI gera baseline Lighthouse mobile e relatório npm audit, além de testar bloqueio de localStorage e foco por teclado. Os cabeçalhos Vercel restringem frames de terceiros, objetos e base URI. Critérios, limites e pendências em `docs/RELEASE-QA.md`.

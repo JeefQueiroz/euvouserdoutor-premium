@@ -40,6 +40,9 @@ try:
                 toggle=page.locator("[data-menu-button]")
                 toggle.click()
                 assert toggle.get_attribute("aria-expanded")=="true"
+                page.keyboard.press("Escape")
+                assert toggle.get_attribute("aria-expanded")=="false"
+                assert toggle.evaluate("(el)=>document.activeElement===el")
             page.screenshot(path=str(capture/f"home-{label}.png"),full_page=True)
             page.goto(base+"/busca.html",wait_until="networkidle")
             field=page.locator("[data-portal-query]")
@@ -182,6 +185,21 @@ try:
                 assert tablet.locator("#primary-navigation a").first.is_visible()
                 assert tablet.locator("#primary-navigation a").first.inner_text()=="Home"
             tablet.close()
+        blocked=browser.new_page(viewport={"width":390,"height":844})
+        blocked_errors=[]
+        blocked.on("pageerror",lambda e:blocked_errors.append(str(e)))
+        blocked.add_init_script("""for (const name of ['getItem','setItem','removeItem']) {
+            Object.defineProperty(Storage.prototype,name,{configurable:true,value(){throw new DOMException('Storage blocked','SecurityError')}});
+        }""")
+        blocked.goto(base+"/flashcards/",wait_until="networkidle")
+        blocked.get_by_role("button",name="Recusar não essenciais").click()
+        assert blocked.locator("#cookie-consent").count()==0
+        blocked.locator("[data-study-start]").click()
+        blocked.locator("[data-study-reveal]").click()
+        blocked.locator("[data-study-rate='good']").click()
+        assert not blocked_errors, f"Falha sem armazenamento local: {blocked_errors}"
+        blocked.close()
+        print("Armazenamento bloqueado: consentimento e revisão em memória OK")
         browser.close()
 finally:
     server.terminate()

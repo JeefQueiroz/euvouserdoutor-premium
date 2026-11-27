@@ -37,10 +37,32 @@ jobs:
           .browser-venv/bin/python -m pip install playwright==1.56.0
           .browser-venv/bin/python -m playwright install --with-deps chromium
           .browser-venv/bin/python scripts/browser_smoke.py
+      - name: Registrar auditoria de dependencias
+        run: |
+          mkdir -p audit-reports
+          npm audit --json > audit-reports/npm-audit.json || true
+          node scripts/summarize-audit.mjs
+      - name: Lighthouse mobile em paginas representativas
+        timeout-minutes: 8
+        run: |
+          mkdir -p audit-reports
+          python3 -m http.server 4174 --bind 127.0.0.1 --directory dist > /tmp/evd-lighthouse-http.log 2>&1 &
+          server=$!
+          trap 'kill "$server" 2>/dev/null || true' EXIT
+          for i in $(seq 1 30); do curl -fsS http://127.0.0.1:4174/ >/dev/null && break; sleep 1; done
+          export CHROME_PATH="$(command -v google-chrome || .browser-venv/bin/python -c 'from playwright.sync_api import sync_playwright; p=sync_playwright().start(); print(p.chromium.executable_path); p.stop()')"
+          for entry in 'home:/' 'noticias:/noticias/' 'flashcards:/flashcards/'; do
+            name="${entry%%:*}"
+            route="${entry#*:}"
+            npx --yes lighthouse@13.6.0 "http://127.0.0.1:4174${route}" --chrome-flags='--headless --no-sandbox --disable-dev-shm-usage' --only-categories=performance,accessibility,best-practices,seo --output=json --output-path="audit-reports/lighthouse-${name}.json" --quiet
+          done
+          node scripts/summarize-lighthouse.mjs
       - name: Registrar capturas do navegador
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: premium-v3-browser-smoke
-          path: browser-captures/
+          path: |
+            browser-captures/
+            audit-reports/
           if-no-files-found: ignore
