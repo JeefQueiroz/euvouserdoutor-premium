@@ -1,8 +1,8 @@
 /* Shared public navigation — isolated from the legacy article theme. */
-.evd-shared-header{position:relative;z-index:50;background:#fff;color:#17253b;border-bottom:1px solid #e3e9f0;font:650 14px/1.4 Inter,ui-sans-serif,system-ui,sans-serif}
+.evd-shared-header{position:relative;z-index:50;background:#f2f3f5;color:#17253b;border-bottom:1px solid #e3e9f0;font:650 14px/1.4 Inter,ui-sans-serif,system-ui,sans-serif}
 .evd-shared-header .evd-header-inner{width:min(1180px,calc(100% - 48px));margin-inline:auto;display:flex;align-items:center;justify-content:space-between;gap:20px;min-height:78px}
 .evd-shared-header .evd-brand{display:flex;flex-direction:column;align-items:flex-start;gap:3px;flex-shrink:0;text-decoration:none}
-.evd-shared-header .evd-brand-frame{position:relative;display:block;overflow:hidden;background:#0b203c;border-radius:11px;width:182px;height:47px;box-shadow:0 4px 14px rgba(10,27,51,.12)}
+.evd-shared-header .evd-brand-frame{position:relative;display:block;overflow:hidden;background:transparent;border-radius:0;width:182px;height:47px;box-shadow:none}
 .evd-shared-header .evd-brand-frame img{position:absolute;left:50%;top:50%;width:310px;max-width:none;height:auto;transform:translate(-50%,-50%);object-fit:contain}
 .evd-shared-header .evd-brand-caption{margin-left:4px;font-size:8px;font-weight:820;letter-spacing:.16em;color:#546d90;line-height:1.2}
 .evd-shared-header .evd-primary-nav{display:flex;align-items:center;gap:3px}
@@ -34,7 +34,7 @@
  .evd-shared-header .evd-brand-caption{font-size:7px}
  .evd-shared-header .evd-menu-toggle{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:5px;width:44px;height:44px;background:white;border:1px solid #d9e2ef;border-radius:10px;cursor:pointer}
  .evd-shared-header .evd-menu-toggle span{width:21px;height:2px;background:#25395a;border-radius:2px}
- .evd-shared-header .evd-primary-nav{display:none;position:absolute;top:100%;left:0;right:0;max-height:calc(100dvh - 72px);overflow-y:auto;flex-direction:column;align-items:stretch;gap:0;padding:10px 18px 20px;background:#fff;border-bottom:1px solid #e3e9f0;box-shadow:0 22px 35px #08162d15}
+ .evd-shared-header .evd-primary-nav{display:none;position:absolute;top:100%;left:0;right:0;max-height:calc(100dvh - 72px);overflow-y:auto;flex-direction:column;align-items:stretch;gap:0;padding:10px 18px 20px;background:#f2f3f5;border-bottom:1px solid #e3e9f0;box-shadow:0 22px 35px #08162d15}
  .evd-shared-header .evd-primary-nav.is-open{display:flex}
  .evd-shared-header .evd-primary-nav a{font-size:15px;padding:13px 15px}
  .evd-shared-header .evd-primary-nav .evd-nav-search{margin:9px 0 0;justify-content:center}

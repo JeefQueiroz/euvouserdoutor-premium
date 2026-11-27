@@ -9,7 +9,7 @@ O azul-profundo (#0a1b33) carrega credibilidade e mantém continuidade com o por
 Tipografia: sistema sem download externo; título 42–86px com espaçamento compacto, corpo 16–18px e texto útil legível. Layout central 1180px, margens mobile 16–18px, cards de 15–20px de raio, sombra só quando cria separação útil.
 
 ## Marca e assinatura
-Logotipo original otimizado (14 KB WebP) dentro de placa azul, em vez do símbolo + genérico. Elemento editorial característico: seção “Explore o portal completo”, que reúne de maneira legível notícias, materiais, flashcards e mentoria. Evitar números decorativos e menus excessivamente amplos.
+Logotipo original otimizado (14 KB WebP), sem placa, fundo ou sombra próprios, sobre cabeçalho cinza muito claro (#f2f3f5), tanto no Premium quanto no legado. A cor e o arquivo da marca permanecem inalterados; conferir legibilidade da versão original no fundo claro durante a revisão visual. Elemento editorial característico: seção “Explore o portal completo”, que reúne de maneira legível notícias, materiais, flashcards e mentoria. Evitar números decorativos e menus excessivamente amplos.
 
 ## UX e limites
 - Navegação: Home, seis destinos editoriais e busca no desktop, menu expansível no mobile, estado da página atual e foco visível.

@@ -32,6 +32,10 @@ try:
             page.on("console",lambda msg:errors.append(msg.text) if msg.type=="error" and "EVD hydration:" in msg.text else None)
             page.goto(base+"/",wait_until="networkidle")
             assert "Conhecimento que" in page.locator("main").inner_text()
+            assert page.locator(".site-header").evaluate("(el)=>getComputedStyle(el).backgroundColor")=="rgb(242, 243, 245)"
+            assert page.locator(".brand-frame").evaluate("(el)=>getComputedStyle(el).backgroundColor")=="rgba(0, 0, 0, 0)"
+            assert page.locator(".brand-frame").evaluate("(el)=>getComputedStyle(el).boxShadow")=="none"
+            assert page.locator(".brand-frame img").evaluate("(el)=>el.complete && el.naturalWidth>0")
             plate=page.locator(".science-plate")
             assert plate.is_visible() and plate.evaluate("(el)=>el.complete && el.naturalWidth>0"), "Ilustracao cientifica ausente"
             assert plate.bounding_box()["width"] <= viewport["width"], "Ilustracao excede viewport"
@@ -61,6 +65,10 @@ try:
             assert page.locator('link[rel="canonical"]').get_attribute("href")==expected_origin.rstrip("/")+"/noticias"
             assert page.locator('meta[property="og:url"]').get_attribute("content")==expected_origin.rstrip("/")+"/noticias"
             assert page.locator(".evd-premium-bridge").count()==0, "Faixa duplicada retornou"
+            assert page.locator(".evd-shared-header").evaluate("(el)=>getComputedStyle(el).backgroundColor")=="rgb(242, 243, 245)"
+            assert page.locator(".evd-brand-frame").evaluate("(el)=>getComputedStyle(el).backgroundColor")=="rgba(0, 0, 0, 0)"
+            assert page.locator(".evd-brand-frame").evaluate("(el)=>getComputedStyle(el).boxShadow")=="none"
+            assert page.locator(".evd-brand-frame img").evaluate("(el)=>el.complete && el.naturalWidth>0")
             nav=page.locator(".evd-shared-header nav")
             assert nav.locator('a[href="/busca"]').count()==1
             assert nav.locator("a").nth(0).inner_text() == "Home"
