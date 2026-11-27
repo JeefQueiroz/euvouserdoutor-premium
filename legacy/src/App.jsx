@@ -11,6 +11,7 @@ import { Materials } from './pages/Materials';
 import { Mentorship } from './pages/Mentorship';
 import { FlashcardsPage } from './pages/FlashcardsPage';
 import { QuestionsPage } from './pages/QuestionsPage';
+import { LaboratoryPage } from './pages/LaboratoryPage';
 import { Article } from './pages/Article';
 import { About } from './pages/About';
 import { Contact } from './pages/Contact';
@@ -158,6 +159,7 @@ export default function App({ initialPath }) {
           {view === 'mentorship' && <Mentorship setView={navigate} telegram={telegram} />}
           {view === 'flashcards' && <FlashcardsPage setView={navigate} />}
           {view === 'questions' && <QuestionsPage />}
+          {view === 'laboratory' && <LaboratoryPage />}
           {view === 'about' && <About />}
           {view === 'author' && <Author setView={navigate} />}
           {view === 'contact' && <Contact />}

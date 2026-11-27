@@ -37,3 +37,6 @@ Ferramenta pública com 12 cartas introdutórias de métodos de estudo, fisiolog
 
 ## Questões comentadas
 Rota `/questoes` integrada ao acervo, busca e biblioteca. Nove questões originais de três temas; feedback por alternativa, resultado da sessão e revisão exclusiva dos erros. Não há cronômetro, conta, envio de respostas ou histórico permanente. A política de privacidade descreve o armazenamento local dos flashcards e o caráter temporário das questões. Conteúdo inicial para revisão didática, sujeito a revisão editorial antes de indexação pública.
+
+## Laboratório científico
+Rota `/laboratorio`: dois mecanismos introdutórios (circulação e trocas alveolares), com esquemas SVG próprios e explicação textual equivalente. Reutiliza o layout, selects nativos e controles de estudo. Azul e vermelho indicam oxigenação ou direção de difusão conforme a legenda, nunca uma representação de cor real do sangue. Realce de uma etapa por ação, animação única de fluxo e preferência de movimento reduzido respeitada. Sem autoplay, WebGL, dados pessoais ou pretensão de precisão anatômica; revisão didática antes da indexação.

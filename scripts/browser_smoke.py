@@ -113,6 +113,19 @@ try:
             assert "Questão 1 de 1" in page.locator(".evd-study-progress").inner_text()
             assert not page.evaluate("document.documentElement.scrollWidth > window.innerWidth + 3"),"Overflow nas questoes"
             page.screenshot(path=str(capture/f"questoes-{label}.png"),full_page=False)
+            page.goto(base+"/laboratorio/",wait_until="networkidle")
+            assert page.locator("[data-lab-prev]").is_disabled()
+            page.locator("[data-lab-next]").click()
+            assert "Dos pulmões ao coração esquerdo" in page.locator("[data-lab-description]").inner_text()
+            page.locator("[data-lab-step='3']").click()
+            assert page.locator("[data-lab-next]").is_disabled()
+            page.locator("[data-lab-topic]").select_option("trocas-gasosas")
+            assert page.locator("[data-lab-prev]").is_disabled()
+            page.locator("[data-lab-next]").click()
+            assert "Difusão de oxigênio" in page.locator("[data-lab-description]").inner_text()
+            assert page.locator("[data-lab-step='1']").get_attribute("aria-pressed")=="true"
+            assert not page.evaluate("document.documentElement.scrollWidth > window.innerWidth + 3"),"Overflow no laboratório"
+            page.screenshot(path=str(capture/f"laboratorio-{label}.png"),full_page=False)
             page.goto(base+"/noticias/cancer-cabeca-pesco%C3%A7o-quimio-imunoterapia-2026/",wait_until="networkidle")
             assert "pescoço" in page.locator("main").inner_text().casefold(), "Rota acentuada nao renderizou a materia"
             page.goto(base+"/noticias/bacterias-lingua-velocidade-raciocinio-2026/",wait_until="networkidle")
@@ -134,6 +147,9 @@ try:
         reduced.goto(base+"/noticias/",wait_until="networkidle")
         assert reduced.locator(".evd-premium-bridge").is_visible()
         assert reduced.locator(".evd-premium-bridge a").first.evaluate("(el)=>getComputedStyle(el).transitionDuration") == "0s"
+        reduced.goto(base+"/laboratorio/",wait_until="networkidle")
+        assert reduced.locator(".evd-lab-trace").evaluate("(el)=>getComputedStyle(el).animationName")=="none"
+        assert reduced.locator("[data-lab-description]").is_visible()
         reduced.close()
         print("Movimento reduzido: home, menu e ponte legada OK")
         browser.close()

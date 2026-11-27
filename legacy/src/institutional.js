@@ -305,6 +305,11 @@ export const routeMeta = {
       'Acompanhamento educacional para organizar rotina, revisão e evolução nos estudos para Medicina.',
     path: '/mentoria',
   },
+  laboratory: {
+    title: 'Laboratório científico | EuvouserDoutor',
+    description: 'Explore circulação sanguínea e trocas gasosas em diagramas interativos de fisiologia.',
+    path: '/laboratorio',
+  },
   questions: {
     title: 'Questões comentadas | EuvouserDoutor',
     description: 'Pratique questões de fisiologia, epidemiologia e métodos de estudo, com explicações e revisão de erros.',
