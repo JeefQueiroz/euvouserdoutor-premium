@@ -92,6 +92,8 @@ try:
             page.wait_for_function("document.querySelector('[data-study-due]')?.textContent.startsWith('11 cartas')")
             assert not page.evaluate("document.documentElement.scrollWidth > window.innerWidth + 3"),"Overflow nos flashcards"
             page.screenshot(path=str(capture/f"flashcards-{label}.png"),full_page=False)
+            page.goto(base+"/noticias/cancer-cabeca-pesco%C3%A7o-quimio-imunoterapia-2026/",wait_until="networkidle")
+            assert "pescoço" in page.locator("main").inner_text().casefold(), "Rota acentuada nao renderizou a materia"
             page.goto(base+"/noticias/bacterias-lingua-velocidade-raciocinio-2026/",wait_until="networkidle")
             assert "bact" in page.locator("body").inner_text().casefold()
             page.screenshot(path=str(capture/f"artigo-{label}.png"),full_page=False)

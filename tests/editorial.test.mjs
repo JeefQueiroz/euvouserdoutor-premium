@@ -35,6 +35,7 @@ test('accented historical routes render the right article and remain searchable'
  assert.ok(pathToView[route]?.startsWith('post_'));
  const html=fs.readFileSync('dist'+route+'/index.html','utf8');
  assert.match(html, /NewsArticle/);
+ assert.match(html, /Nova Estratégia Contra Câncer de Cabeça e Pescoço/);
  const index=JSON.parse(fs.readFileSync('dist/search-index.json','utf8'));
  assert.ok(index.some(x=>x.href===route));
 });
