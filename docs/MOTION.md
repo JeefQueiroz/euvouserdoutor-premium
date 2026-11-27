@@ -19,3 +19,6 @@ npm run check; smoke Chromium desktop/mobile, cenário prefers-reduced-motion, n
 2. Auditar identidade e unificar header/footer e tokens de cor entre as duas arquiteturas.
 3. Revisar hero científico com fallback estático e imagens editoriais próprias.
 4. Flashcards e diagramas acessíveis; produção audiovisual offline, isolada do build.
+
+## Hero científico
+A ilustração SVG original `assets/science-helix.svg` substitui o objeto abstrato da Home. A entrada usa o token de 550 ms somente em `prefers-reduced-motion: no-preference`. A imagem permanece visível sem JS ou animação. O esquema é ilustrativo, não uma estrutura molecular validada. Validação: carregamento da imagem, ausência de overflow, orçamento de 22 KB e teste de movimento reduzido.

@@ -25,3 +25,6 @@ A camada compartilhada `assets/motion.css` define durações e curvas sem depend
 
 ## Navegação unificada
 `src/navigation.mjs` define os destinos públicos usados pelo Premium e pelo React. O cabeçalho legado usa links HTML reais e a busca global `/busca` em vez de um índice local de seis sugestões. `assets/legacy-shell.css` aproxima cabeçalho e rodapé da identidade Premium sem alterar o tema dos artigos. A faixa de retorno continua nesta etapa para compatibilidade e poderá ser removida após validação. Links institucionais e preferências de cookies permanecem disponíveis.
+
+## Assinatura científica da Home
+O hero usa uma ilustração vetorial original da dupla hélice do DNA em azul, violeta e teal, apresentada explicitamente como esquema, não como modelo molecular de precisão. Uma única composição focal; sem etiquetas decorativas, contadores ou fundos animados contínuos. Imagem estática com dimensões intrínsecas e movimento breve opcional. Não modificar logotipo, navegação ou textos médicos nesta fase.

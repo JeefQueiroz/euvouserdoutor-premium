@@ -31,6 +31,10 @@ try:
             page.on("pageerror",lambda e:errors.append(str(e)))
             page.goto(base+"/",wait_until="networkidle")
             assert "Conhecimento que" in page.locator("main").inner_text()
+            plate=page.locator(".science-plate")
+            assert plate.is_visible() and plate.evaluate("(el)=>el.complete && el.naturalWidth>0"), "Ilustracao cientifica ausente"
+            assert plate.bounding_box()["width"] <= viewport["width"], "Ilustracao excede viewport"
+            assert page.locator(".scientific-hero figcaption").is_visible()
             assert not page.evaluate("document.documentElement.scrollWidth > window.innerWidth + 3"),"Overflow horizontal na home"
             if label=="mobile":
                 toggle=page.locator("[data-menu-button]")
@@ -79,7 +83,7 @@ try:
         reduced=browser.new_page(viewport={"width":390,"height":844},reduced_motion="reduce")
         reduced.goto(base+"/",wait_until="networkidle")
         assert reduced.locator("h1").is_visible(), "Titulo nao pode depender de animacao"
-        assert reduced.locator(".core-shape").evaluate("(el)=>getComputedStyle(el).animationName") == "none"
+        assert reduced.locator(".science-plate").evaluate("(el)=>getComputedStyle(el).animationName") == "none"
         toggle=reduced.locator("[data-menu-button]")
         toggle.click()
         assert toggle.get_attribute("aria-expanded")=="true"
