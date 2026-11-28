@@ -23,3 +23,19 @@ test('shared logo accessible name includes visible caption',{skip:process.env.SK
   assert.match(html,/aria-label="EuvouserDoutor — SAÚDE · CIÊNCIA · EDUCAÇÃO — Página inicial"/);
  }
 });
+
+test('Home secondary text and section labels meet 4.5:1 on light surfaces',()=>{
+ const css=fs.readFileSync('dist/assets/site.css','utf8');
+ const token=name=>css.match(new RegExp('--'+name+':(#[0-9a-f]{6})','i'))?.[1];
+ const eyebrow=css.match(/\.eyebrow\{[^}]*?color:(#[0-9a-f]{6})/i)?.[1];
+ const luminance=hex=>{
+  assert.match(hex,/^#[0-9a-f]{6}$/i);
+  const [r,g,b]=hex.slice(1).match(/../g).map(x=>parseInt(x,16)/255).map(x=>x<=.04045?x/12.92:((x+.055)/1.055)**2.4);
+  return .2126*r+.7152*g+.0722*b;
+ };
+ for(const fg of [token('muted'),eyebrow])for(const bg of [token('paper'),'#eef4fa','#ffffff']){
+  const a=luminance(fg),b=luminance(bg);
+  const ratio=(Math.max(a,b)+.05)/(Math.min(a,b)+.05);
+  assert.ok(ratio>=4.5,fg+' on '+bg+' = '+ratio.toFixed(2));
+ }
+});

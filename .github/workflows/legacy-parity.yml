@@ -51,7 +51,7 @@ jobs:
           trap 'kill "$server" 2>/dev/null || true' EXIT
           for i in $(seq 1 30); do curl -fsS http://127.0.0.1:4174/ >/dev/null && break; sleep 1; done
           export CHROME_PATH="$(command -v google-chrome || .browser-venv/bin/python -c 'from playwright.sync_api import sync_playwright; p=sync_playwright().start(); print(p.chromium.executable_path); p.stop()')"
-          for entry in 'home:/' 'noticias:/noticias/' 'flashcards:/flashcards/'; do
+          for entry in 'home:/' 'noticias:/noticias/' 'flashcards:/flashcards/' 'questoes:/questoes/' 'laboratorio:/laboratorio/' 'videos:/videos.html'; do
             name="${entry%%:*}"
             route="${entry#*:}"
             npx --yes lighthouse@13.6.0 "http://127.0.0.1:4174${route}" --chrome-flags='--headless --no-sandbox --disable-dev-shm-usage' --only-categories=performance,accessibility,best-practices,seo --output=json --output-path="audit-reports/lighthouse-${name}.json" --quiet

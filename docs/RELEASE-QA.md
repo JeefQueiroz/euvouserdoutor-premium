@@ -15,3 +15,6 @@ Run 46079533611: 38/38 testes, npm audit sem vulnerabilidades reportadas, Lighth
 
 ## Controle editorial e publicação
 Inventário gerado em cada build e armazenado como artefato de CI, com gate de indexação por aprovação vinculada ao conteúdo. Não há aprovações presumidas. Ver `docs/EDITORIAL-REVIEW.md`. O antigo deploy-mac.sh não é mais um caminho de publicação; PRs empilhados e aprovação explícita são obrigatórios no fluxo documentado.
+
+## Validação editorial e ampliação de cobertura
+Run 46080080664: 43/43 testes, inventário de 80 rotas (0 aprovadas, 80 pendentes), npm audit zero vulnerabilidades reportadas. Lighthouse mobile Home 91/95, Notícias 96/100, Flashcards 100/100 (performance/acessibilidade). Os três problemas residuais da Home foram atribuídos às cores de texto #66738a e #5c70ad em fundos claros. Ajuste conservador para #5e6b82 e #52649e, com teste de contraste mínimo 4,5:1. Lighthouse ampliado para questões, laboratório e vídeos, com metas explicitadas por rota. O resultado das novas rotas e correções depende da execução do CI; métricas não equivalem a Core Web Vitals de campo.
