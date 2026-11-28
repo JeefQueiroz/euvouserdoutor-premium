@@ -14,8 +14,8 @@
       button.setAttribute('aria-label', open ? 'Fechar menu de navegação' : 'Abrir menu de navegação');
     });
     nav.querySelectorAll('a').forEach(a => a.addEventListener('click', close));
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
-    window.addEventListener('resize', () => { if(window.innerWidth > 760) close(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && button.getAttribute('aria-expanded') === 'true') { close(); button.focus(); } });
+    window.addEventListener('resize', () => { if(window.innerWidth > 900) close(); });
   }
   const input = document.querySelector('[data-search]');
   if (input) {

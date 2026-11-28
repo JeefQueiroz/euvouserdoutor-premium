@@ -1,15 +1,15 @@
-import React, { useState, useEffect, lazy, Suspense } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
-import { GoogleAnalytics } from './components/analytics/GoogleAnalytics';
 import { CookieConsent } from './components/CookieConsent';
 import { institutional, normalizeRoutePath, pathToView, routeMeta } from './institutional';
-import { BlogPost } from './pages/BlogPost';
 import { Home } from './pages/Home';
 import { News } from './pages/News';
 import { Materials } from './pages/Materials';
 import { Mentorship } from './pages/Mentorship';
 import { FlashcardsPage } from './pages/FlashcardsPage';
+import { QuestionsPage } from './pages/QuestionsPage';
+import { LaboratoryPage } from './pages/LaboratoryPage';
 import { Article } from './pages/Article';
 import { About } from './pages/About';
 import { Contact } from './pages/Contact';
@@ -21,7 +21,7 @@ import { CookiePolicy } from './pages/CookiePolicy';
 import { Author } from './pages/Author';
 import { NotFound } from './pages/NotFound';
 
-export default function App({ initialPath }) {
+export default function App({ initialPath, BlogPostComponent }) {
   const resolveView = (pathname) => pathToView[normalizeRoutePath(pathname)] ?? 'notfound';
   const currentPath = initialPath || (typeof window !== 'undefined' ? window.location.pathname : '/');
   const initialView = resolveView(currentPath);
@@ -29,106 +29,25 @@ export default function App({ initialPath }) {
   const telegram = institutional.telegram;
   const profileImg = "/jeff-queiroz-perfil.webp";
 
+  // Every public destination has its own prerendered document and metadata.
+  // Do not overwrite canonical tags or JSON-LD after mounting React.
   const navigate = (nextView) => {
-    if (typeof nextView !== 'string' || !routeMeta[nextView]) {
-      console.error('Invalid view:', nextView);
+    const meta = typeof nextView === 'string' ? routeMeta[nextView] : null;
+    if (!meta || meta.requiresAuth || nextView === 'notfound') {
       setView('notfound');
-      if (window.location.pathname !== routeMeta.notfound.path) {
-        window.history.pushState({}, '', routeMeta.notfound.path);
-      }
+      document.title = routeMeta.notfound.title;
+      document.querySelector('meta[name="robots"]')?.setAttribute('content','noindex,nofollow');
       return;
     }
-
-    setView(nextView);
-    const path = routeMeta[nextView].path;
-    if (window.location.pathname !== path) {
-      window.history.pushState({}, '', path);
-    }
+    window.location.assign(meta.path);
   };
 
   useEffect(() => {
-    const onPopState = () => setView(resolveView(window.location.pathname));
+    const onPopState = () => {
+      if (resolveView(window.location.pathname) !== view) window.location.reload();
+    };
     window.addEventListener('popstate', onPopState);
     return () => window.removeEventListener('popstate', onPopState);
-  }, []);
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-
-    const meta = routeMeta[view] || routeMeta.home;
-    const canonicalUrl = `${institutional.site}${meta.path === '/' ? '' : meta.path}`;
-    document.title = meta.title;
-
-    const setMeta = (selector, attr, value) => {
-      const tag = document.head.querySelector(selector);
-      if (tag) tag.setAttribute(attr, value);
-    };
-
-    setMeta('meta[name="description"]', 'content', meta.description);
-    setMeta('meta[property="og:title"]', 'content', meta.title);
-    setMeta('meta[property="og:description"]', 'content', meta.description);
-    setMeta('meta[property="og:url"]', 'content', canonicalUrl);
-    setMeta('meta[name="twitter:title"]', 'content', meta.title);
-    setMeta('meta[name="twitter:description"]', 'content', meta.description);
-    setMeta('link[rel="canonical"]', 'href', canonicalUrl);
-
-    const imageUrl = `${institutional.site}${meta.image || '/logo-euvouserdoutor.webp'}`;
-    const isArticle = typeof view === 'string' && view.startsWith('post_');
-    const jsonLd = {
-      '@context': 'https://schema.org',
-      '@graph': [
-        {
-          '@type': 'Organization',
-          '@id': `${institutional.site}/#organization`,
-          name: 'EuvouserDoutor',
-          url: institutional.site,
-          logo: `${institutional.site}/logo-euvouserdoutor.webp`,
-          founder: { '@id': `${institutional.site}/autor/jeff-queiroz#person` },
-        },
-        {
-          '@type': 'Person',
-          '@id': `${institutional.site}/autor/jeff-queiroz#person`,
-          name: 'Jeff Queiroz',
-          url: `${institutional.site}/autor/jeff-queiroz`,
-          image: `${institutional.site}/jeff-queiroz-perfil.webp`,
-          worksFor: { '@id': `${institutional.site}/#organization` },
-        },
-        {
-          '@type': isArticle ? 'NewsArticle' : 'WebPage',
-          '@id': `${canonicalUrl}#${isArticle ? 'article' : 'webpage'}`,
-          url: canonicalUrl,
-          headline: meta.title,
-          name: meta.title,
-          description: meta.description,
-          image: imageUrl,
-          inLanguage: 'pt-BR',
-          author: { '@id': `${institutional.site}/autor/jeff-queiroz#person` },
-          creator: { '@id': `${institutional.site}/autor/jeff-queiroz#person` },
-          publisher: { '@id': `${institutional.site}/#organization` },
-          ...(isArticle ? {
-            ...(meta.datePublished ? { datePublished: meta.datePublished } : {}),
-            ...(meta.dateModified ? { dateModified: meta.dateModified } : {}),
-            mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalUrl },
-          } : {}),
-        },
-        {
-          '@type': 'BreadcrumbList',
-          itemListElement: [
-            { '@type': 'ListItem', position: 1, name: 'Início', item: `${institutional.site}/` },
-            ...(isArticle || view === 'news' ? [{ '@type': 'ListItem', position: 2, name: 'Notícias', item: `${institutional.site}/noticias` }] : []),
-            ...(isArticle ? [{ '@type': 'ListItem', position: 3, name: meta.title, item: canonicalUrl }] : []),
-          ],
-        },
-      ],
-    };
-    let jsonLdScript = document.head.querySelector('#evd-jsonld');
-    if (!jsonLdScript) {
-      jsonLdScript = document.createElement('script');
-      jsonLdScript.id = 'evd-jsonld';
-      jsonLdScript.type = 'application/ld+json';
-      document.head.appendChild(jsonLdScript);
-    }
-    jsonLdScript.textContent = JSON.stringify(jsonLd);
   }, [view]);
 
   // Não há autenticação server-side disponível neste frontend estático.
@@ -138,8 +57,9 @@ export default function App({ initialPath }) {
   return (
     <div className="min-h-screen bg-[#080A0F] font-sans selection:bg-[#4F8CFF] selection:text-white text-left">
       {/* Analytics desativado no Premium ate revisao LGPD e consentimento. */}
+      <a className="evd-skip-link" href="#conteudo">Pular para o conteúdo</a>
       <Header setView={navigate} currentView={view} telegram={telegram} />
-      <main>
+      <main id="conteudo" tabIndex={-1}>
         <Suspense fallback={
           <div className="flex items-center justify-center min-h-[60vh] bg-[#080A0F]">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#4F8CFF]"></div>
@@ -151,6 +71,8 @@ export default function App({ initialPath }) {
           {view === 'materials' && <Materials setView={navigate} telegram={telegram} />}
           {view === 'mentorship' && <Mentorship setView={navigate} telegram={telegram} />}
           {view === 'flashcards' && <FlashcardsPage setView={navigate} />}
+          {view === 'questions' && <QuestionsPage />}
+          {view === 'laboratory' && <LaboratoryPage />}
           {view === 'about' && <About />}
           {view === 'author' && <Author setView={navigate} />}
           {view === 'contact' && <Contact />}
@@ -160,7 +82,7 @@ export default function App({ initialPath }) {
           {view === 'intellectualProperty' && <IntellectualProperty />}
           {view === 'cookies' && <CookiePolicy />}
           {view === 'admin' && <NotFound setView={navigate} />}
-          {typeof view === 'string' && view.startsWith('post_') && <BlogPost setView={navigate} postId={view} profileImg={profileImg} telegram={telegram} />}
+          {typeof view === 'string' && view.startsWith('post_') && (BlogPostComponent ? <BlogPostComponent setView={navigate} postId={view} profileImg={profileImg} telegram={telegram} /> : <NotFound setView={navigate} />)}
           {view === 'notfound' && <NotFound setView={navigate} />}
         </Suspense>
       </main>

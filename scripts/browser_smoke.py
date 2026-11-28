@@ -29,13 +29,25 @@ try:
             page=browser.new_page(viewport=viewport,device_scale_factor=1)
             errors=[]
             page.on("pageerror",lambda e:errors.append(str(e)))
+            page.on("console",lambda msg:errors.append(msg.text) if msg.type=="error" and "EVD hydration:" in msg.text else None)
             page.goto(base+"/",wait_until="networkidle")
             assert "Conhecimento que" in page.locator("main").inner_text()
+            assert page.locator(".site-header").evaluate("(el)=>getComputedStyle(el).backgroundColor")=="rgb(242, 243, 245)"
+            assert page.locator(".brand-frame").evaluate("(el)=>getComputedStyle(el).backgroundColor")=="rgba(0, 0, 0, 0)"
+            assert page.locator(".brand-frame").evaluate("(el)=>getComputedStyle(el).boxShadow")=="none"
+            assert page.locator(".brand-frame img").evaluate("(el)=>el.complete && el.naturalWidth>0")
+            plate=page.locator(".science-plate")
+            assert plate.is_visible() and plate.evaluate("(el)=>el.complete && el.naturalWidth>0"), "Ilustracao cientifica ausente"
+            assert plate.bounding_box()["width"] <= viewport["width"], "Ilustracao excede viewport"
+            assert page.locator(".scientific-hero figcaption").is_visible()
             assert not page.evaluate("document.documentElement.scrollWidth > window.innerWidth + 3"),"Overflow horizontal na home"
             if label=="mobile":
                 toggle=page.locator("[data-menu-button]")
                 toggle.click()
                 assert toggle.get_attribute("aria-expanded")=="true"
+                page.keyboard.press("Escape")
+                assert toggle.get_attribute("aria-expanded")=="false"
+                assert toggle.evaluate("(el)=>document.activeElement===el")
             page.screenshot(path=str(capture/f"home-{label}.png"),full_page=True)
             page.goto(base+"/busca.html",wait_until="networkidle")
             field=page.locator("[data-portal-query]")
@@ -45,25 +57,158 @@ try:
             page.locator('[data-search-category="noticias"]').click()
             assert page.locator(".portal-result-card").count() >= 1, "Filtro de notícias sem resultados"
             page.screenshot(path=str(capture/f"busca-{label}.png"),full_page=False)
+            requested=[]
+            page.on("request",lambda request:requested.append(request.url))
             page.goto(base+"/noticias/",wait_until="networkidle")
-            assert "Voltar ao Premium" in page.locator(".evd-premium-bridge").inner_text()
+            assert not any("/assets/BlogPost-" in url for url in requested), "Carregamento precoce de artigos"
+            expected_origin=os.environ.get("SITE_URL","") if os.environ.get("VERCEL_ENV")=="production" and os.environ.get("PUBLIC_INDEXING")=="true" and os.environ.get("SITE_URL","").rstrip("/")=="https://www.euvouserdoutor.com" else "https://euvouserdoutor-premium-v3.vercel.app"
+            assert page.locator('link[rel="canonical"]').get_attribute("href")==expected_origin.rstrip("/")+"/noticias"
+            assert page.locator('meta[property="og:url"]').get_attribute("content")==expected_origin.rstrip("/")+"/noticias"
+            assert page.locator(".evd-premium-bridge").count()==0, "Faixa duplicada retornou"
+            assert page.locator(".evd-shared-header").evaluate("(el)=>getComputedStyle(el).backgroundColor")=="rgb(242, 243, 245)"
+            assert page.locator(".evd-brand-frame").evaluate("(el)=>getComputedStyle(el).backgroundColor")=="rgba(0, 0, 0, 0)"
+            assert page.locator(".evd-brand-frame").evaluate("(el)=>getComputedStyle(el).boxShadow")=="none"
+            assert page.locator(".evd-brand-frame img").evaluate("(el)=>el.complete && el.naturalWidth>0")
+            nav=page.locator(".evd-shared-header nav")
+            assert nav.locator('a[href="/busca"]').count()==1
+            assert nav.locator("a").nth(0).inner_text() == "Home"
+            assert nav.locator("a").nth(1).inner_text() == "Notícias"
+            assert nav.locator('a[href="/noticias"][aria-current="page"]').count()==1
+            if label=="mobile":
+                legacy_toggle=page.locator(".evd-menu-toggle")
+                legacy_toggle.click()
+                assert nav.is_visible()
+                page.keyboard.press("Escape")
+                assert legacy_toggle.get_attribute("aria-expanded")=="false"
+                assert legacy_toggle.evaluate("(el)=>document.activeElement===el")
+            assert not page.evaluate("document.documentElement.scrollWidth > window.innerWidth + 3"),"Overflow horizontal no acervo"
+            assert page.locator(".evd-shared-footer a[href='/busca']").count()==1
             if label == "mobile":
                 cookie_box=page.locator("#cookie-consent")
                 assert cookie_box.count() == 1
                 assert cookie_box.bounding_box()["height"] < 300, "Consentimento cobre grande parte da tela"
 
             assert "Medicina" in page.locator("body").inner_text() or "medicina" in page.locator("body").inner_text().lower()
+            news_entries=page.locator("[data-news-entry]")
+            all_targets=news_entries.evaluate_all("(els)=>els.map(el=>el.getAttribute('href'))")
+            assert len(all_targets)>=70 and len(all_targets)==len(set(all_targets)), "Noticias perdidas ou duplicadas"
+            assert page.locator("[data-news-filter='Neurociência']").count()==1, "Categoria ausente"
+            page.locator("[data-news-filter='Neurociência']").click()
+            assert news_entries.count()>0 and news_entries.count()<len(all_targets), "Filtro de noticias nao funciona"
+            page.locator("[data-news-filter='Todas']").click()
+            assert news_entries.count()==len(all_targets)
             page.screenshot(path=str(capture/f"noticias-{label}.png"),full_page=True)
             for route,needle in [("/materiais/","Materiais de Apoio"),("/flashcards/","Flashcards Doutor"),("/mentoria/","Mentoria")]:
                 page.goto(base+route,wait_until="networkidle")
                 assert needle.casefold() in page.locator("body").inner_text().casefold(),f"Texto ausente em {route}"
                 assert page.locator("main").count()>=1,f"Sem main em {route}"
+            page.goto(base+"/flashcards/",wait_until="networkidle")
+            page.locator("[data-study-start]").click()
+            assert page.locator("[data-study-question]").is_visible()
+            page.locator("[data-study-reveal]").click()
+            assert page.locator("[data-study-answer]").is_visible()
+            page.locator("[data-study-rate='good']").click()
+            page.reload(wait_until="networkidle")
+            page.wait_for_function("document.querySelector('[data-study-due]')?.textContent.startsWith('11 cartas')")
+            assert not page.evaluate("document.documentElement.scrollWidth > window.innerWidth + 3"),"Overflow nos flashcards"
+            page.screenshot(path=str(capture/f"flashcards-{label}.png"),full_page=False)
+            page.goto(base+"/questoes/",wait_until="networkidle")
+            if page.locator("#cookie-consent").count():
+                page.get_by_role("button",name="Recusar não essenciais").click()
+            page.locator("[data-quiz-topic]").select_option("Epidemiologia")
+            page.locator("[data-quiz-start]").click()
+            page.locator("input[name=quiz-choice]").nth(0).check()
+            page.locator("[data-quiz-submit]").click()
+            assert page.locator("[data-quiz-feedback]").is_visible()
+            assert page.locator(".evd-quiz-explanations li").count()==4
+            page.locator("[data-quiz-next]").click()
+            page.locator("input[name=quiz-choice]").nth(2).check()
+            page.locator("[data-quiz-submit]").click()
+            page.locator("[data-quiz-next]").click()
+            page.locator("input[name=quiz-choice]").nth(0).check()
+            page.locator("[data-quiz-submit]").click()
+            page.locator("[data-quiz-next]").click()
+            assert "2 de 3" in page.locator("[data-quiz-score]").inner_text()
+            page.locator("[data-quiz-retry]").click()
+            assert "Questão 1 de 1" in page.locator(".evd-study-progress").inner_text()
+            assert not page.evaluate("document.documentElement.scrollWidth > window.innerWidth + 3"),"Overflow nas questoes"
+            page.screenshot(path=str(capture/f"questoes-{label}.png"),full_page=False)
+            page.goto(base+"/laboratorio/",wait_until="networkidle")
+            assert page.locator("[data-lab-prev]").is_disabled()
+            page.locator("[data-lab-next]").click()
+            assert "Dos pulmões ao coração esquerdo" in page.locator("[data-lab-description]").inner_text()
+            page.locator("[data-lab-step='3']").click()
+            assert page.locator("[data-lab-next]").is_disabled()
+            page.locator("[data-lab-topic]").select_option("trocas-gasosas")
+            assert page.locator("[data-lab-prev]").is_disabled()
+            page.locator("[data-lab-next]").click()
+            assert "Difusão de oxigênio" in page.locator("[data-lab-description]").inner_text()
+            assert page.locator("[data-lab-step='1']").get_attribute("aria-pressed")=="true"
+            assert not page.evaluate("document.documentElement.scrollWidth > window.innerWidth + 3"),"Overflow no laboratório"
+            page.screenshot(path=str(capture/f"laboratorio-{label}.png"),full_page=False)
+            page.goto(base+"/videos.html",wait_until="networkidle")
+            assert page.locator("[data-video-library]").is_visible()
+            assert page.locator("video[autoplay]").count()==0
+            for video in page.locator("video").all():
+                assert video.get_attribute("preload")=="none"
+                assert video.locator("track[kind=captions]").count()==1
+            assert not page.evaluate("document.documentElement.scrollWidth > window.innerWidth + 3"),"Overflow em videos"
+            page.screenshot(path=str(capture/f"videos-{label}.png"),full_page=False)
+            page.goto(base+"/noticias/cancer-cabeca-pesco%C3%A7o-quimio-imunoterapia-2026/",wait_until="networkidle")
+            assert "pescoço" in page.locator("main").inner_text().casefold(), "Rota acentuada nao renderizou a materia"
+            assert any("/assets/BlogPost-" in url for url in requested), "Modulo de artigo nao carregado"
+            assert page.locator('link[rel="canonical"]').get_attribute("href")==expected_origin.rstrip("/")+"/noticias/cancer-cabeca-pesco%C3%A7o-quimio-imunoterapia-2026"
             page.goto(base+"/noticias/bacterias-lingua-velocidade-raciocinio-2026/",wait_until="networkidle")
             assert "bact" in page.locator("body").inner_text().casefold()
             page.screenshot(path=str(capture/f"artigo-{label}.png"),full_page=False)
             assert not errors, f"Erro Javascript em {label}: {errors[:8]}"
             print(f"Navegador {label}: home, notícias, materiais, flashcards, mentoria e artigo OK")
             page.close()
+        reduced=browser.new_page(viewport={"width":390,"height":844},reduced_motion="reduce")
+        reduced.goto(base+"/",wait_until="networkidle")
+        assert reduced.locator("h1").is_visible(), "Titulo nao pode depender de animacao"
+        assert reduced.locator(".science-plate").evaluate("(el)=>getComputedStyle(el).animationName") == "none"
+        toggle=reduced.locator("[data-menu-button]")
+        toggle.click()
+        assert toggle.get_attribute("aria-expanded")=="true"
+        assert reduced.locator("#primary-navigation").evaluate("(el)=>getComputedStyle(el).animationName") == "none"
+        toggle.click()
+        assert toggle.get_attribute("aria-expanded")=="false"
+        reduced.goto(base+"/noticias/",wait_until="networkidle")
+        assert reduced.locator(".evd-premium-bridge").count()==0
+        reduced.locator(".evd-menu-toggle").click()
+        assert reduced.locator("#primary-navigation a").first.evaluate("(el)=>getComputedStyle(el).transitionDuration") == "0s"
+        reduced.locator("#primary-navigation a").first.click()
+        assert "Conhecimento que" in reduced.locator("main").inner_text()
+        reduced.goto(base+"/laboratorio/",wait_until="networkidle")
+        assert reduced.locator(".evd-lab-trace").evaluate("(el)=>getComputedStyle(el).animationName")=="none"
+        assert reduced.locator("[data-lab-description]").is_visible()
+        reduced.close()
+        print("Movimento reduzido: home e navegação compartilhada OK")
+        for width in [800, 900, 901, 1024]:
+            tablet=browser.new_page(viewport={"width":width,"height":900})
+            for route,toggle_selector in [("/","[data-menu-button]"),("/noticias/",".evd-menu-toggle")]:
+                tablet.goto(base+route,wait_until="networkidle")
+                assert not tablet.evaluate("document.documentElement.scrollWidth > window.innerWidth + 3"),f"Overflow de navegação em {width}: {route}"
+                if width<=900: tablet.locator(toggle_selector).click()
+                assert tablet.locator("#primary-navigation a").first.is_visible()
+                assert tablet.locator("#primary-navigation a").first.inner_text()=="Home"
+            tablet.close()
+        blocked=browser.new_page(viewport={"width":390,"height":844})
+        blocked_errors=[]
+        blocked.on("pageerror",lambda e:blocked_errors.append(str(e)))
+        blocked.add_init_script("""for (const name of ['getItem','setItem','removeItem']) {
+            Object.defineProperty(Storage.prototype,name,{configurable:true,value(){throw new DOMException('Storage blocked','SecurityError')}});
+        }""")
+        blocked.goto(base+"/flashcards/",wait_until="networkidle")
+        blocked.get_by_role("button",name="Recusar não essenciais").click()
+        assert blocked.locator("#cookie-consent").count()==0
+        blocked.locator("[data-study-start]").click()
+        blocked.locator("[data-study-reveal]").click()
+        blocked.locator("[data-study-rate='good']").click()
+        assert not blocked_errors, f"Falha sem armazenamento local: {blocked_errors}"
+        blocked.close()
+        print("Armazenamento bloqueado: consentimento e revisão em memória OK")
         browser.close()
 finally:
     server.terminate()

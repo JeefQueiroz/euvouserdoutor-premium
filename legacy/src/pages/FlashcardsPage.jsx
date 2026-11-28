@@ -1,8 +1,10 @@
 import { Microscope, Zap, Send, ArrowLeft, Brain, LineChart, BookOpen, CheckCircle } from 'lucide-react';
 import { Sidebar } from '../components/Sidebar';
+import { FlashcardStudy } from '../components/FlashcardStudy';
+import '../study/study.css';
 
 export const FlashcardsPage = ({ setView, profileImg, telegram }) => (
-  <div className="animate-in pb-20 text-left bg-[#080A0F] text-[#F8FAFC] min-h-screen">
+  <div className="pb-20 text-left bg-[#080A0F] text-[#F8FAFC] min-h-screen">
     <div className="bg-[#0A192F] border-b border-white/[0.05] pt-12 pb-20 px-6 text-left relative overflow-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_0%,rgba(79,140,255,0.12),transparent_40%)]" />
       
@@ -17,13 +19,14 @@ export const FlashcardsPage = ({ setView, profileImg, telegram }) => (
           Flashcards Doutor
         </h1>
         <p className="text-base md:text-lg text-[#98A2B3] max-w-2xl font-medium leading-relaxed">
-          A união perfeita entre <strong className="text-white font-bold">Active Recall</strong> e <strong className="text-white font-bold">Repetição Espaçada</strong> para Medicina.
+          Pratique com <strong className="text-white font-bold">Active Recall</strong> e <strong className="text-white font-bold">Repetição Espaçada</strong> em temas introdutórios de Medicina.
         </p>
       </div>
     </div>
     
     <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-10 -mt-10 relative z-20">
       <div className="lg:col-span-8 space-y-6">
+        <FlashcardStudy />
         
         <div className="bg-[#11141A] rounded-[28px] p-6 md:p-10 shadow-2xl border border-white/[0.05] text-left space-y-6 premium-border">
           <h2 className="text-xl md:text-2xl font-black text-[#F8FAFC] tracking-tighter flex items-center gap-3">
@@ -41,11 +44,11 @@ export const FlashcardsPage = ({ setView, profileImg, telegram }) => (
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
             <div className="bg-white/[0.02] p-5 rounded-2xl border border-white/[0.05]">
-              <h4 className="font-black text-[#F8FAFC] mb-2 text-base">Estudo Tradicional</h4>
+              <h3 className="font-black text-[#F8FAFC] mb-2 text-base">Estudo Tradicional</h3>
               <p className="text-xs text-[#98A2B3] leading-relaxed font-medium">Gasto elevado de tempo criando resumos estáticos, com risco de sensação de domínio sem teste real de lembrança.</p>
             </div>
             <div className="bg-[#4F8CFF]/5 p-5 rounded-2xl border border-[#4F8CFF]/20">
-              <h4 className="font-black text-[#F8FAFC] mb-2 text-base">Flashcards Ativos</h4>
+              <h3 className="font-black text-[#F8FAFC] mb-2 text-base">Flashcards Ativos</h3>
               <p className="text-xs text-[#98A2B3] leading-relaxed font-medium">A repetição espaçada ajuda a distribuir novos contatos com o tema e favorece a retenção ao longo da preparação.</p>
             </div>
           </div>

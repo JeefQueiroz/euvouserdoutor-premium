@@ -31,10 +31,11 @@ test('Search index covers restored news and resources',()=>{
     assert.ok(fs.existsSync(path.join(out,route+'.html'))||fs.existsSync(path.join(out,route,'index.html')),'URL sem HTML: '+item.href);
   }
 });
-test('Restored pages provide return navigation to Premium',()=>{
+test('Restored pages use the shared Home navigation without a duplicate bar',()=>{
   for(const route of ['noticias','materiais','mentoria','flashcards']){
     const page=html(route+'/index.html');
-    assert.match(page,/evd-premium-bridge/);
+    assert.doesNotMatch(page,/class="evd-premium-bridge"|Voltar ao Premium/);
+    assert.match(page,/<nav[^>]*id="primary-navigation"[^>]*>[\s\S]*?<a href="\/"[^>]*>Home<\/a>/);
     assert.match(page,/href="\/busca"/);
     assert.match(page,/portal-bridge\.css/);
   }

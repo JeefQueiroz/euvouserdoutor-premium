@@ -16,10 +16,10 @@ export const Sidebar = ({ setView }) => {
               <div className="absolute -bottom-1 -right-1 bg-emerald-500 w-4 h-4 rounded-full border-4 border-[#11141A] shadow-lg"></div>
             </div>
             <div>
-              <h3 className="font-black text-sm text-[#F8FAFC] leading-tight tracking-tight flex items-center gap-1.5">
+              <h2 className="font-black text-sm text-[#F8FAFC] leading-tight tracking-tight flex items-center gap-1.5">
                 Jeff Queiroz 
                 <CheckCircle size={14} className="text-[#4F8CFF]" fill="currentColor" />
-              </h3>
+              </h2>
               <p className="text-[10px] text-[#4F8CFF] font-black uppercase tracking-widest mt-1">Medicina | UFMG</p>
             </div>
           </div>
@@ -39,7 +39,7 @@ export const Sidebar = ({ setView }) => {
           </div>
           <div className="space-y-2">
             <p className="text-[#4F8CFF] text-[10px] font-black uppercase tracking-[0.3em]">Recursos de Elite</p>
-            <h3 className="text-lg font-black tracking-tighter text-white leading-none">Biblioteca Doutor</h3>
+            <h2 className="text-lg font-black tracking-tighter text-white leading-none">Biblioteca Doutor</h2>
             <p className="text-[#98A2B3] text-xs leading-relaxed font-medium">
               Guias e checklists exclusivos para organizar sua jornada acadêmica.
             </p>
@@ -57,7 +57,7 @@ export const Sidebar = ({ setView }) => {
       <div className="bg-[#11141A] border border-white/[0.05] rounded-[32px] p-7 space-y-6 premium-border">
         <div className="flex items-center gap-2">
           <TrendingUp size={14} className="text-[#4F8CFF]" />
-          <h3 className="text-[#F8FAFC] font-black uppercase tracking-[0.2em] text-[10px]">Navegação Rápida</h3>
+          <h2 className="text-[#F8FAFC] font-black uppercase tracking-[0.2em] text-[10px]">Navegação Rápida</h2>
         </div>
         <div className="grid grid-cols-1 gap-3">
           {[
@@ -84,7 +84,7 @@ export const Sidebar = ({ setView }) => {
       {/* Mini Newsletter / Sparkle Card */}
       <div className="p-6 rounded-[32px] bg-gradient-to-br from-[#11141A] to-[#0A192F] border border-white/[0.05] space-y-3 relative overflow-hidden">
         <Sparkles size={40} className="absolute -right-4 -bottom-4 text-[#4F8CFF]/5" />
-        <h4 className="text-xs font-black text-white uppercase tracking-widest">Plantão EVD</h4>
+        <h2 className="text-xs font-black text-white uppercase tracking-widest">Plantão EVD</h2>
         <p className="text-[10px] text-[#98A2B3] font-medium leading-relaxed">
           Receba atualizações científicas e pautas exclusivas diretamente no seu ecossistema.
         </p>

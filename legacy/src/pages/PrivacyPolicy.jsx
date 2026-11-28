@@ -83,6 +83,9 @@ export const PrivacyPolicy = () => (
           </p>
         </Section>
 
+        <Section title="Progresso de estudo no navegador">
+          <p>Os flashcards armazenam localmente identificadores de cartas, avaliações e datas de revisão, sem sincronização ou envio ao servidor. O progresso pode ser apagado na ferramenta ou nas configurações do navegador. As questões comentadas mantêm as respostas apenas na sessão aberta.</p>
+        </Section>
         <Section title="6. Compartilhamento de dados">
           <p>
             Dados podem ser compartilhados com provedores técnicos necessários ao funcionamento do site, como hospedagem,

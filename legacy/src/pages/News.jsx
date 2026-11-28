@@ -3,13 +3,12 @@ import { ArrowLeft, ArrowRight, BookOpen, Clock, Sparkles, TrendingUp, Filter } 
 import { Sidebar } from '../components/Sidebar';
 import { SafeImage } from '../components/SafeImage';
 import { autoPosts } from '../autoPosts';
+import { routeMeta } from '../institutional';
 
 export const News = ({ setView }) => {
   const [selectedCategory, setSelectedCategory] = useState('Todas');
 
-  const categories = ['Todas', 'Saúde Pública', 'Saúde & Ciência', 'Tecnologia Médica', 'Técnicas de estudo', 'Neurologia', 'Rotina', 'Revisão'];
-
-  const posts = [...autoPosts,
+  const rawPosts = [...autoPosts,
     {
       id: "post_tilapia_factory_ceara_2026",
       title: "Ceará terá fábrica de curativos feitos com pele de tilápia em escala industrial",
@@ -768,13 +767,29 @@ export const News = ({ setView }) => {
     }
   ];
 
-  const filteredPosts = selectedCategory === 'Todas' 
-    ? posts 
-    : posts.filter(post => post.cat === selectedCategory);
-
-  const featuredPost = posts.find(p => p.featured);
-  const recentPosts = filteredPosts.filter(p => !p.featured).slice(0, 3);
-  const otherPosts = filteredPosts.filter(p => !p.featured).slice(3);
+  // Keep every valid article reachable, including secondary featured stories.
+  // Prefer first entry for duplicate targets (autoPosts precede older cards).
+  const byTarget = new Map();
+  for (const post of rawPosts) {
+    if (routeMeta[post.target]?.path?.startsWith('/noticias/') && !byTarget.has(post.target)) {
+      byTarget.set(post.target, { ...post, href: routeMeta[post.target].path });
+    }
+  }
+  // Include historical routes that never received a listing card.
+  for (const [target, meta] of Object.entries(routeMeta)) {
+    if (meta.path?.startsWith('/noticias/') && !byTarget.has(target)) {
+      byTarget.set(target, {
+        id: target, target, href: meta.path,
+        title: meta.title.replace(/\s*\|\s*(?:Eu\s*Vou\s*Ser\s*Doutor|EuvouserDoutor)$/i,''),
+        subtitle: meta.description, cat: 'Acervo histórico', img: target === 'post_retina_chip_2026' ? '/retina_chip_tech.webp' : null
+      });
+    }
+  }
+  const posts = [...byTarget.values()];
+  const categories = ['Todas', ...new Set(posts.map(post => post.cat).filter(Boolean))];
+  const filteredPosts = selectedCategory === 'Todas' ? posts : posts.filter(post => post.cat === selectedCategory);
+  const featuredPost = selectedCategory === 'Todas' ? posts.find(post => post.featured) : null;
+  const gridPosts = filteredPosts.filter(post => post.target !== featuredPost?.target);
 
   return (
     <div className="bg-[#080A0F] text-[#F8FAFC] min-h-screen pb-24 text-left">
@@ -784,10 +799,10 @@ export const News = ({ setView }) => {
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="flex items-center gap-3 mb-8">
             <span className="w-12 h-px bg-[#4F8CFF]"></span>
-            <span className="text-[10px] font-black text-[#4F8CFF] uppercase tracking-[0.4em]">Editorial Intelligence</span>
+            <span className="text-[10px] font-black text-[#4F8CFF] uppercase tracking-[0.4em]">Editorial de saúde e ciência</span>
           </div>
           <h1 className="text-5xl md:text-8xl font-black tracking-tighter leading-[0.9] text-[#F8FAFC] mb-8">
-            Notícias <span className="text-white/20">&</span> Insights
+            Notícias <span className="text-white/40">&amp;</span> Ciência
           </h1>
           <p className="text-lg md:text-xl text-[#98A2B3] font-medium max-w-2xl leading-relaxed">
             Explorando as fronteiras da medicina, ciência e tecnologia para acelerar sua jornada acadêmica.
@@ -801,10 +816,13 @@ export const News = ({ setView }) => {
           {categories.map(cat => (
             <button
               key={cat}
+              type="button"
+              aria-pressed={selectedCategory === cat}
+              data-news-filter={cat}
               onClick={() => setSelectedCategory(cat)}
               className={`px-6 py-3 rounded-[22px] text-[10px] font-black uppercase tracking-widest transition-all ${
                 selectedCategory === cat 
-                ? 'bg-[#4F8CFF] text-white shadow-[0_0_20px_rgba(79,140,255,0.4)]' 
+                ? 'bg-[#4F8CFF] text-[#080A0F] shadow-[0_0_20px_rgba(79,140,255,0.4)]' 
                 : 'text-[#98A2B3] hover:text-white hover:bg-white/5'
               }`}
             >
@@ -814,20 +832,21 @@ export const News = ({ setView }) => {
         </div>
 
         <h2 className="sr-only">Lista de notícias</h2>
+        <p className="mb-6 text-sm text-[#CBD5E1]" role="status" aria-live="polite" data-news-count>{filteredPosts.length} {filteredPosts.length === 1 ? 'publicação' : 'publicações'}</p>
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
           <div className="lg:col-span-8 xl:col-span-9 space-y-12">
             {/* Featured Post */}
             {featuredPost && selectedCategory === 'Todas' && (
-              <button
-                type="button"
-                onClick={() => setView(featuredPost.target)}
-                className="w-full text-left group cursor-pointer relative rounded-[48px] overflow-hidden border border-white/[0.05] bg-[#11141A] hover-lift transition-all duration-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4F8CFF]"
+              <a
+                href={featuredPost.href}
+                data-news-entry={featuredPost.target}
+                className="block w-full text-left group cursor-pointer relative rounded-[48px] overflow-hidden border border-white/[0.05] bg-[#11141A] hover-lift transition-all duration-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4F8CFF]"
               >
                 <div className="grid grid-cols-1 md:grid-cols-2">
                   <div className="aspect-[4/3] md:aspect-auto overflow-hidden relative">
                     <SafeImage 
                       src={featuredPost.img} 
-                      alt={featuredPost.title} 
+                      alt="" 
                       priority
                       width={1200}
                       height={900}
@@ -858,22 +877,22 @@ export const News = ({ setView }) => {
                     </div>
                   </div>
                 </div>
-              </button>
+              </a>
             )}
 
             {/* Post Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-              {(selectedCategory === 'Todas' ? [...recentPosts, ...otherPosts] : filteredPosts).map((post, idx) => (
-                <button
-                  type="button"
-                  key={post.id}
-                  onClick={() => setView(post.target)}
+              {gridPosts.map(post => (
+                <a
+                  key={post.target}
+                  href={post.href}
+                  data-news-entry={post.target}
                   className="w-full text-left group cursor-pointer bg-[#11141A] rounded-[40px] border border-white/[0.05] overflow-hidden hover-lift transition-all duration-500 flex flex-col h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4F8CFF]"
                 >
                   <div className="aspect-[16/10] overflow-hidden relative">
                     <SafeImage 
-                      src={post.img} 
-                      alt={post.title} 
+                      src={post.img === "/curativo_pele_tilapia_ceara_2026.jpg" ? "/assets/tilapia-imagem-em-migracao.svg" : post.img} 
+                      alt="" 
                       width={960}
                       height={600}
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
@@ -886,8 +905,8 @@ export const News = ({ setView }) => {
                   </div>
                   <div className="p-8 flex flex-col flex-grow space-y-4">
                     <div className="flex items-center justify-between text-[9px] font-black text-[#98A2B3] uppercase tracking-widest">
-                      <span className="flex items-center gap-1.5"><Clock size={10} /> {post.readTime}</span>
-                      <span>{post.date}</span>
+                      <span className="flex items-center gap-1.5"><Clock size={10} /> {post.readTime || 'Leitura'}</span>
+                      <span>{post.date || 'Acervo'}</span>
                     </div>
                     <h3 className="text-xl font-black text-white leading-tight group-hover:text-[#4F8CFF] transition-colors line-clamp-2">
                       {post.title}
@@ -899,7 +918,7 @@ export const News = ({ setView }) => {
                       Ler Matéria Completa <ArrowRight size={14} strokeWidth={3} />
                     </div>
                   </div>
-                </button>
+                </a>
               ))}
             </div>
           </div>
