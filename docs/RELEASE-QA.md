@@ -18,3 +18,6 @@ Inventário gerado em cada build e armazenado como artefato de CI, com gate de i
 
 ## Validação editorial e ampliação de cobertura
 Run 46080080664: 43/43 testes, inventário de 80 rotas (0 aprovadas, 80 pendentes), npm audit zero vulnerabilidades reportadas. Lighthouse mobile Home 91/95, Notícias 96/100, Flashcards 100/100 (performance/acessibilidade). Os três problemas residuais da Home foram atribuídos às cores de texto #66738a e #5c70ad em fundos claros. Ajuste conservador para #5e6b82 e #52649e, com teste de contraste mínimo 4,5:1. Lighthouse ampliado para questões, laboratório e vídeos, com metas explicitadas por rota. O resultado das novas rotas e correções depende da execução do CI; métricas não equivalem a Core Web Vitals de campo.
+
+## Resultados ampliados e correções
+Run 46087189301: 44/44 testes, npm audit zero vulnerabilidades reportadas. Lighthouse mobile: Home 97/100, Notícias 96/100, Flashcards 100/100, Questões 90/100, Laboratório 88/100 e Vídeos 100/100 (performance/acessibilidade); boas práticas 100 em todas. LCP 1503/2253/1504/3603/3800/1352 ms. Questões e laboratório passaram a hidratar o HTML inicial como os flashcards; medir novamente e conferir os erros recuperáveis. O inventário editorial inclui triagem heurística e hashes dos dados interativos, sem aprovações presumidas.

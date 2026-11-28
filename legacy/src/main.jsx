@@ -8,8 +8,8 @@ const rootElement = document.getElementById('root');
 const view = pathToView[normalizeRoutePath(window.location.pathname)];
 function mount(BlogPostComponent) {
   const app = <App BlogPostComponent={BlogPostComponent} />;
-  // Keep the server-rendered first paint on the two measured learning/news routes.
-  if ((view === 'news' || view === 'flashcards') && rootElement.hasChildNodes()) {
+  // Keep the server-rendered first paint on the measured learning/news routes.
+  if (['news','flashcards','questions','laboratory'].includes(view) && rootElement.hasChildNodes()) {
     ReactDOM.hydrateRoot(rootElement, app, {
       onRecoverableError: error => console.error('EVD hydration:', error.message)
     });

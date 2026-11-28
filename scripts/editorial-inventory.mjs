@@ -8,6 +8,17 @@ export function mainDigest(html){
  if(!main)throw Error('Documento sem conteúdo principal');
  return createHash('sha256').update(main).digest('hex');
 }
+// Interactive learning data is not completely represented in the first HTML render.
+const interactiveSources = Object.freeze({
+ '/flashcards':['legacy/src/study/cards.mjs','legacy/src/study/review.mjs','legacy/src/components/FlashcardStudy.jsx'],
+ '/questoes':['legacy/src/study/questions.mjs','legacy/src/study/quiz.mjs','legacy/src/pages/QuestionsPage.jsx'],
+ '/laboratorio':['legacy/src/study/labs.mjs','legacy/src/pages/LaboratoryPage.jsx']
+});
+export function contentDigest(root,route,html){
+ const hash=createHash('sha256');
+ hash.update(JSON.stringify({main:mainDigest(html),sources:(interactiveSources[route]||[]).map(file=>({file,sha256:createHash('sha256').update(fs.readFileSync(path.join(root,file))).digest('hex')}))}));
+ return hash.digest('hex');
+}
 export function reviewStatus(record,digest){
  if(!record)return 'pending';
  if(record.sha256!==digest)return 'stale';
@@ -25,11 +36,18 @@ export function collectInventory(root,{skipLegacy=false}={}){
  const entries=routes.map(({route,group})=>{
   const file=path.join(dist,route.slice(1)+(group==='premium'?'.html':'/index.html'));
   const html=fs.readFileSync(file,'utf8');
-  const digest=mainDigest(html);
+  const digest=contentDigest(root,route,html);
   const main=html.match(/<main\b[^>]*>[\s\S]*?<\/main>/i)[0];
   // Inventory links, not verified citations. No external requests.
   const externalLinks=[...new Set([...main.matchAll(/\bhref="(https?:\/\/[^"]+)"/gi)].map(x=>x[1].replaceAll('&amp;','&')))].sort();
-  return {route,group,sha256:digest,status:reviewStatus(Object.hasOwn(approvals,route)?approvals[route]:null,digest),externalLinks};
+  const title=html.match(/<title>([\s\S]*?)<\/title>/i)?.[1]||route;
+  // Prioritization is heuristic, not a determination of medical accuracy.
+  const flags=[];
+  if(/\b(câncer|cancer|leucemia|tratamento|terapia|vacina|medicamento|diagnóstico|diagnostico|ensaio clínico|imunoterapia|barrett|cirurgia)\b/i.test(title))flags.push('clinical-claims');
+  if(!externalLinks.length)flags.push('no-external-links-in-initial-html');
+  if(interactiveSources[route])flags.push('interactive-content');
+  if(main.includes('tilapia-imagem-em-migracao.svg'))flags.push('media-placeholder');
+  return {route,group,title,sha256:digest,status:reviewStatus(Object.hasOwn(approvals,route)?approvals[route]:null,digest),priority:flags.includes('clinical-claims')?'high':group==='study'?'medium':'standard',flags,externalLinks};
  });
  const counts={total:entries.length,approved:entries.filter(x=>x.status==='approved').length,pending:entries.filter(x=>x.status==='pending').length,stale:entries.filter(x=>x.status==='stale').length};
  return {scope:skipLegacy?'diagnostic-premium-only':'full',counts,entries};
